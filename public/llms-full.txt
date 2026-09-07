@@ -1,0 +1,114 @@
+# ByteBreach Security Academy - Comprehensive AI Reference Manual (llms-full.txt)
+
+## 1. Platform Overview & Mission
+ByteBreach is a gamified cybersecurity training platform and cyber warfare battleground. Its primary objective is to bridge the divide between theoretical networking/security concepts and practical, hands-on terminal mastery.
+
+### Core Disciplines:
+1. Enterprise Networking (Cisco CCNA, CCNP Enterprise, CCIE Infrastructure)
+2. Offensive Cybersecurity (Reconnaissance, Web Application Testing, Active Directory Exploitation, Privilege Escalation)
+3. Defensive Operations (Network Traffic Analysis, SIEM Log Auditing, Incident Response, Cryptographic Analysis)
+
+---
+
+## 2. Structured Certification Tracks
+
+### Track 1: CCNA (Cisco Certified Network Associate)
+- Focus: Foundations of modern IP networking.
+- Modules Include:
+  - Network Fundamentals & OSI/TCP-IP Models
+  - IPv4 Addressing & Variable Length Subnet Masking (VLSM)
+  - IPv6 Global Unicast & Link-Local Architectures
+  - Cisco IOS Command Line Configuration & Switch Port Security
+  - VLANs, 802.1Q Trunking, and Inter-VLAN Routing
+  - Spanning Tree Protocol (STP) & Rapid STP (RSTP)
+  - Dynamic Routing with OSPFv2 Single & Multi-Area Topologies
+  - Access Control Lists (Standard & Extended ACLs)
+  - Network Address Translation (Static, Dynamic, PAT)
+  - DHCP, DNS, NTP, and SNMP Network Services
+
+### Track 2: CCNP (Cisco Certified Network Professional - Enterprise)
+- Focus: Advanced enterprise routing, infrastructure engineering, and high availability.
+- Modules Include:
+  - Advanced OSPF Tuning (LSA types, stub areas, authentication)
+  - Border Gateway Protocol (eBGP and iBGP peering, path attributes, route maps)
+  - Dual-Stack Enterprise Network Design
+  - First Hop Redundancy Protocols (HSRP, VRRP)
+  - Enterprise Wireless Architecture & Security
+  - Quality of Service (QoS) Queuing, Policing, and Shaping
+  - Software-Defined Networking (Cisco SD-WAN & DNA Center fundamentals)
+  - Network Programmability, RESTCONF, and NETCONF using Python
+
+### Track 3: CCIE (Cisco Certified Internetwork Expert - Enterprise Infrastructure)
+- Focus: Expert-level complex network topologies and critical infrastructure defense.
+- Modules Include:
+  - Complex Multiprotocol BGP & Traffic Engineering
+  - Segment Routing & MPLS VPN Architectures
+  - Advanced Layer 2/3 Infrastructure Hardening
+  - High-Volume Packet Captures & Protocol Dissection
+  - Automated Telemetry, Python Automation, and CI/CD Network Deployments
+
+### Track 4: Ethical Hacking & Penetration Testing
+- Focus: Authorized adversarial testing, vulnerability research, and defensive hardening.
+- Modules Include:
+  - Passive & Active Reconnaissance (OSINT, Nmap, Masscan)
+  - Web Application Security (OWASP Top 10: SQLi, XSS, CSRF, SSRF, IDOR)
+  - Linux & Windows Privilege Escalation Vectors
+  - Active Directory Exploitation (Kerberoasting, AS-REP Roasting, BloodHound mapping)
+  - Cryptography & Hash Cracking (Hashcat, John the Ripper, asymmetric encryption)
+  - Digital Forensics & Incident Response (DFIR memory analysis, packet inspection)
+
+---
+
+## 3. Practice Labs & CTF Engine
+- **Target Repository**: 250+ dedicated challenge environments.
+- **Difficulty Tiers**: Easy, Medium, Hard, Insane.
+- **XP Scaling**: 50 XP to 300 XP depending on challenge difficulty.
+- **Verification Protocol**:
+  - Flag Format: `FLAG{<alphanumeric_secret>}`
+  - Normalization: System automatically trims leading/trailing whitespace and normalizes text for case-insensitive verification.
+  - Rate Limiting & Security: One verified completion recorded per student account per lab. Wrong submissions allow immediate re-entry without account penalty to foster learning.
+
+---
+
+## 4. Daily Challenge Engine
+- **Reset Frequency**: Every 24 hours at 00:00 UTC.
+- **Reward**: 50 XP upon correct submission.
+- **Structure**: Real-world scenario with optional technical attachment (packet captures, logs, source code snippets) and automated scoring.
+
+---
+
+## 5. Cheats & Technical Resources Vault
+- **Categories**:
+  1. `Cheat Codes / Command Syntax`
+  2. `Extra Code Snippets`
+  3. `Lab Handouts & Extra Activity`
+- **Formats Available**:
+  - Dynamic in-browser Markdown inspection modal with language-highlighted code blocks.
+  - Client-side in-memory Blob generation exporting to formatted `.md` or `.txt` files for offline terminal use.
+  - Direct download links for authentic cloud-hosted PDF and PCF attachments.
+
+---
+
+## 6. Student Progression & Rank Hierarchy
+- **Level 1**: Script Kiddie (0 - 249 XP)
+- **Level 2**: Packet Sniffer (250 - 499 XP)
+- **Level 3**: Byte Breaker (500 - 999 XP)
+- **Level 4**: Cyber Operative (1000 - 1999 XP)
+- **Level 5**: Root Master (2000+ XP)
+
+---
+
+## 7. Public Navigation Endpoints
+- Home / Dashboard: /
+- Learning Paths Catalog: /learning-paths
+- Practice Labs CTF: /practice-labs
+- Technical Resource Vault: /resources
+- Operative Leaderboard: /leaderboard
+- About the Academy: /about
+- FAQ & Knowledge Base: /faq
+- Direct Command Uplink (Contact): /contact
+- Terms of Engagement: /terms
+- Privacy Policy: /privacy
+- Cybersecurity Educational Disclaimer: /disclaimer
+- Careers: /careers
+- Cookie Policy: /cookies

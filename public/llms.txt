@@ -1,0 +1,24 @@
+# ByteBreach Security Academy
+
+> ByteBreach is a premier, gamified cybersecurity academy and hands-on CTF battleground. Designed for security researchers, network engineers, and ethical hackers, it delivers structured certification curricula (CCNA, CCNP, CCIE, Ethical Hacking), 250+ isolated practice labs, dynamic cheat sheets, and real-time rank progression.
+
+## Core Learning Paths
+- [CCNA - Cisco Certified Network Associate](/learning-paths/ccna): Foundational networking, IPv4/IPv6 VLSM subnetting, packet inspection, routing protocols (OSPF, EIGRP), and switch security.
+- [CCNP - Enterprise Infrastructure](/learning-paths/ccnp-enterprise): Enterprise dual-stack architectures, BGP, SD-WAN foundations, infrastructure security, and network automation.
+- [CCIE - Enterprise Infrastructure Masterclass](/learning-paths/ccie): Expert-level complex network topologies, border routing, and mission-critical infrastructure defense.
+- [Ethical Hacking & Penetration Testing](/learning-paths/ethical-hacking): Authorized reconnaissance, web exploitation, privilege escalation, Active Directory attacks, and defensive hardening.
+
+## Practice Labs & CTF Challenges
+- [Practice Labs Battleground](/practice-labs): 250+ structured cybersecurity challenges spanning Web Security, Active Directory, Network Defense, Privilege Escalation, Cryptography, and DFIR.
+- [Daily Challenge](/): Fresh real-world cyber scenario updated every 24 hours awarding +50 XP upon solution verification.
+
+## Resource Vault & Cheat Codes
+- [Cheats & Technical Resources](/resources): Searchable command syntax library, Nmap discovery templates, Wireshark filters, Bash scripts, and lab handouts with on-the-fly markdown inspection and offline download.
+
+## Gamification & Verification Rules
+- **XP Progression**: Ranks scale dynamically from Script Kiddie (0 XP) up to Root Master (2000+ XP).
+- **Flag Verification**: Flags follow the standardized `FLAG{...}` format and are verified case-insensitively with automatic whitespace trimming.
+- **Student Progress**: Track completion percentages, streak multipliers, and accumulated study time in real-time.
+
+## Full Context & Deep Documentation
+- [Comprehensive Academy Documentation (llms-full.txt)](/llms-full.txt): Complete syllabus, lab blueprints, flag validation protocols, and technical API references for LLMs and AI agents.

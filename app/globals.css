@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #080b12; color: #eef4ff; font-family: var(--font-inter), sans-serif; }
+button, input, textarea { font: inherit; }
+::selection { background: rgba(53, 213, 208, .25); color: #fff; }
+.grid-bg { background-image: linear-gradient(rgba(53,213,208,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(53,213,208,.035) 1px, transparent 1px); background-size: 32px 32px; }
+.glass { background: rgba(16,22,32,.72); border: 1px solid #1b2636; backdrop-filter: blur(14px); }
+.eyebrow { color: #7d8ca5; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+pre { overflow-x: auto; }
+.code-keyword { color: #c792ea; }.code-string { color: #c3e88d; }.code-command { color: #82aaff; }.code-comment { color: #63728a; }
+.field { border: 1px solid #1b2636; border-radius: .75rem; background: #0b1018; padding: .7rem .8rem; color: #eef4ff; font-size: .8rem; outline: none; }
+.field:focus { border-color: rgba(53,213,208,.7); }
+
+/* ==========================================================================
+   Ultra-Thin Sleek Cyan Scrollbar (Global & Cross-Browser)
+   ========================================================================== */
+
+/* Firefox standard scrollbar styles */
+html,
+body,
+*,
+*::before,
+*::after {
+  scrollbar-width: thin;
+  scrollbar-color: #06b6d4 transparent;
+}
+
+/* WebKit & Chromium (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #06b6d4;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22d3ee;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.7);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Cards, code blocks, preformatted boxes, textareas, and overflow containers */
+pre,
+code,
+textarea,
+article,
+.glass,
+[class*="overflow-"] {
+  scrollbar-width: thin;
+  scrollbar-color: #06b6d4 transparent;
+}
+
+pre::-webkit-scrollbar,
+code::-webkit-scrollbar,
+textarea::-webkit-scrollbar,
+article::-webkit-scrollbar,
+.glass::-webkit-scrollbar,
+[class*="overflow-"]::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+pre::-webkit-scrollbar-track,
+code::-webkit-scrollbar-track,
+textarea::-webkit-scrollbar-track,
+article::-webkit-scrollbar-track,
+.glass::-webkit-scrollbar-track,
+[class*="overflow-"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb,
+code::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb,
+article::-webkit-scrollbar-thumb,
+.glass::-webkit-scrollbar-thumb,
+[class*="overflow-"]::-webkit-scrollbar-thumb {
+  background: #06b6d4;
+  border-radius: 9999px;
+}
+
+pre::-webkit-scrollbar-thumb:hover,
+code::-webkit-scrollbar-thumb:hover,
+textarea::-webkit-scrollbar-thumb:hover,
+article::-webkit-scrollbar-thumb:hover,
+.glass::-webkit-scrollbar-thumb:hover,
+[class*="overflow-"]::-webkit-scrollbar-thumb:hover {
+  background: #22d3ee;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.7);
+}
