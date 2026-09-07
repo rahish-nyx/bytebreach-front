@@ -2,9 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/src/context/AuthContext";
-import { readFileSync } from "node:fs";
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebaseAdmin";
 
 import { GoogleAdSense } from "@/components/GoogleAdSense";
 import { FloatingBreachBuddy } from "@/components/FloatingBreachBuddy";
@@ -43,12 +41,8 @@ const defaultKeywords = [
 
 async function getSeo(): Promise<Seo> {
   try {
-    const source = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH
-      ? readFileSync(process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH, "utf8")
-      : process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON;
-    if (!source) return {};
-    const app = getApps().length ? getApps()[0] : initializeApp({ credential: cert(JSON.parse(source)) });
-    return ((await getFirestore(app).doc("system/seo").get()).data() as Seo) || {};
+    const doc = await adminDb.doc("system/seo").get();
+    return (doc.data() as Seo) || {};
   } catch {
     return {};
   }

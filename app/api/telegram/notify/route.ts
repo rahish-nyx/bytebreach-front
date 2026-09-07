@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { readFileSync } from "node:fs";
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebaseAdmin";
 
 type NotificationPayload = {
   studentName?: string;
@@ -30,13 +28,9 @@ export async function POST(request: Request) {
   let chatId = raw?.telegramChatId || "";
   if (!token || !chatId) {
     try {
-      const source = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH ? readFileSync(process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH, "utf8") : process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON;
-      if (source) {
-        const app = getApps().length ? getApps()[0] : initializeApp({ credential: cert(JSON.parse(source)) });
-        const settings = (await getFirestore(app).doc("system/settings").get()).data() || {};
-        token = String(settings.telegramBotToken || process.env.TELEGRAM_BOT_TOKEN || "");
-        chatId = String(settings.telegramChatId || process.env.TELEGRAM_CHAT_ID || "");
-      }
+      const settings = (await adminDb.doc("system/settings").get()).data() || {};
+      token = String(settings.telegramBotToken || process.env.TELEGRAM_BOT_TOKEN || "");
+      chatId = String(settings.telegramChatId || process.env.TELEGRAM_CHAT_ID || "");
     } catch {
       token = process.env.TELEGRAM_BOT_TOKEN || token;
       chatId = process.env.TELEGRAM_CHAT_ID || chatId;

@@ -1,18 +1,5 @@
 import { NextResponse } from "next/server";
-import { readFileSync } from "node:fs";
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore";
-
-function adminApp() {
-  if (getApps().length) return getApps()[0];
-  const credentialPath = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH;
-  const credentialJson = credentialPath
-    ? readFileSync(credentialPath, "utf8")
-    : process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON;
-  if (!credentialJson) throw new Error("Firebase Admin credentials are not configured.");
-  return initializeApp({ credential: cert(JSON.parse(credentialJson)) });
-}
+import { adminAuth, adminDb } from "@/lib/firebaseAdmin";
 
 export async function POST(request: Request) {
   try {
@@ -39,9 +26,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const app = adminApp();
-    const auth = getAuth(app);
-    const firestore = getFirestore(app);
+    const auth = adminAuth;
+    const firestore = adminDb;
 
     // Look up user by email in Firebase Auth and Firestore
     let uid = "";

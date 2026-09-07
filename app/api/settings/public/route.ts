@@ -1,20 +1,9 @@
 import { NextResponse } from "next/server";
-import { readFileSync } from "node:fs";
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-function adminApp() {
-  if (getApps().length) return getApps()[0];
-  const source = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH
-    ? readFileSync(process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH, "utf8")
-    : process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON;
-  if (!source) throw new Error("Firebase Admin credentials are not configured.");
-  return initializeApp({ credential: cert(JSON.parse(source)) });
-}
+import { adminDb } from "@/lib/firebaseAdmin";
 
 export async function GET() {
   try {
-    const data = (await getFirestore(adminApp()).doc("system/settings").get()).data() || {};
+    const data = (await adminDb.doc("system/settings").get()).data() || {};
     return NextResponse.json({
       dailyChallengeXp: Number(data.dailyChallengeXp || 50),
       roomCompletionXp: Number(data.roomCompletionXp || 25),

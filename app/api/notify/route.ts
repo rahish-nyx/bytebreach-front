@@ -1,33 +1,21 @@
 import { NextResponse } from "next/server";
-import { readFileSync } from "node:fs";
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { adminApp, adminDb } from "@/lib/firebaseAdmin";
 import { getMessaging } from "firebase-admin/messaging";
 
 type NotifyRequest = { title?: string; body?: string; target?: "all" | "token" | "user"; token?: string; userId?: string; link?: string };
-
-function adminApp() {
-  if (getApps().length) return getApps()[0];
-  const credentialPath = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH;
-  const credentialJson = credentialPath
-    ? readFileSync(credentialPath, "utf8")
-    : process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON;
-  if (!credentialJson) throw new Error("Firebase Admin credentials are not configured.");
-  return initializeApp({ credential: cert(JSON.parse(credentialJson)) });
-}
 
 export async function POST(request: Request) {
   try {
     const payload = await request.json() as NotifyRequest;
     if (!payload.title?.trim() || !payload.body?.trim()) return NextResponse.json({ error: "title and body are required." }, { status: 400 });
-    const messaging = getMessaging(adminApp());
+    const messaging = getMessaging(adminApp);
     let tokens: string[] = [];
     if (payload.target === "token" && payload.token) tokens = [payload.token];
     else if (payload.target === "user" && payload.userId) {
-      const user = (await getFirestore(adminApp()).doc(`users/${payload.userId}`).get()).data();
+      const user = (await adminDb.doc(`users/${payload.userId}`).get()).data();
       tokens = Array.isArray(user?.fcmTokens) ? user.fcmTokens.filter((token): token is string => typeof token === "string") : [];
     } else {
-      const snapshot = await getFirestore(adminApp()).collection("users").get();
+      const snapshot = await adminDb.collection("users").get();
       tokens = snapshot.docs.flatMap((document) => {
         const values = document.data().fcmTokens;
         return Array.isArray(values) ? values.filter((token): token is string => typeof token === "string") : [];
