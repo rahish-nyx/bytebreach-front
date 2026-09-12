@@ -132,6 +132,10 @@ function LoginForm() {
         window.crypto.getRandomValues(buffer);
         const generatedEmergencyCode = (100000 + (buffer[0] % 900000)).toString();
 
+        // Cryptographically hash the emergency code with SHA-256 so plaintext is never stored in DB
+        const hashBuf = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(generatedEmergencyCode));
+        const emergencyCodeHash = Array.from(new Uint8Array(hashBuf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+
         const credential = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(credential.user, { displayName: handle.trim() });
         await upsertUserProfile({
@@ -140,7 +144,7 @@ function LoginForm() {
           email: credential.user.email,
           displayName: handle.trim(),
           role: "student",
-          emergencyCode: generatedEmergencyCode,
+          emergencyCodeHash,
           rank: "Script Kiddie",
           xp: 0,
           completedLabs: [],

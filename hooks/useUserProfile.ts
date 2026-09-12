@@ -21,6 +21,7 @@ export type ProfileData = {
   trackXp?: Record<string, number>;
   lastActiveDate?: string;
   emergencyCode?: string;
+  emergencyCodeHash?: string;
 };
 
 export function useUserProfile() {
@@ -31,7 +32,7 @@ export function useUserProfile() {
   useEffect(() => {
     const checkLocalAdmin = () => {
       if (typeof window !== "undefined") {
-        setIsLocalAdmin(window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true");
+        setIsLocalAdmin(process.env.NODE_ENV !== "production" && window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true");
       }
     };
     checkLocalAdmin();

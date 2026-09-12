@@ -18,7 +18,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
       router.replace("/login?error=unauthorized");
       return;
     }
-    if (window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true") {
+    if (process.env.NODE_ENV !== "production" && window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true") {
       setAllowed(true);
       return;
     }

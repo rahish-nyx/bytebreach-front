@@ -14,6 +14,7 @@ export type UserProfile = {
   learningTimeMinutes?: number;
   lastActiveDate?: string;
   emergencyCode?: string;
+  emergencyCodeHash?: string;
 };
 
 export async function getUserProfile(uid: string) {

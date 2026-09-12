@@ -73,9 +73,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const savedCode = userDocData.emergencyCode ? String(userDocData.emergencyCode).trim() : null;
+    const crypto = await import("crypto");
+    const inputHash = crypto.createHash("sha256").update(emergencyCode).digest("hex");
+    const savedHash = userDocData.emergencyCodeHash ? String(userDocData.emergencyCodeHash).trim() : null;
+    const legacyPlain = userDocData.emergencyCode ? String(userDocData.emergencyCode).trim() : null;
 
-    if (!savedCode) {
+    if (!savedHash && !legacyPlain) {
       return NextResponse.json(
         {
           error:
@@ -85,7 +88,10 @@ export async function POST(request: Request) {
       );
     }
 
-    if (savedCode !== emergencyCode) {
+    const matchesHash = Boolean(savedHash && savedHash.toLowerCase() === inputHash.toLowerCase());
+    const matchesPlain = Boolean(legacyPlain && legacyPlain === emergencyCode);
+
+    if (!matchesHash && !matchesPlain) {
       return NextResponse.json(
         {
           error: "Invalid Emergency Pass Code. Please verify your 6-digit code and try again."
@@ -96,6 +102,19 @@ export async function POST(request: Request) {
 
     // Update password in Firebase Auth
     await auth.updateUser(uid, { password: newPassword });
+
+    // Ensure plaintext emergency code is deleted and securely replaced with SHA-256 hash
+    if (legacyPlain || !savedHash) {
+      const { FieldValue } = await import("firebase-admin/firestore");
+      await firestore
+        .collection("users")
+        .doc(targetDocId)
+        .update({
+          emergencyCodeHash: inputHash,
+          emergencyCode: FieldValue.delete()
+        })
+        .catch(() => {});
+    }
 
     return NextResponse.json({
       success: true,
