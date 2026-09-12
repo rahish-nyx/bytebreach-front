@@ -18,6 +18,7 @@ type Challenge = {
   instructions?: string;
   category?: string;
   parentTopic?: string;
+  difficulty?: "easy" | "medium";
   id?: string;
   updatedAt?: unknown;
 };
@@ -45,6 +46,8 @@ export function DailyChallenge() {
   }, [user]);
 
   useEffect(() => {
+    // Proactively verify 10:00 AM cycle rotation
+    void fetch("/api/daily-challenge/rotate?sync=1").catch(() => {});
     return onSnapshot(doc(db, "dailyChallenges", "current"), (snapshot) => {
       setChallenge(snapshot.exists() ? (snapshot.data() as Challenge) : null);
     });
@@ -126,9 +129,22 @@ export function DailyChallenge() {
   return (
     <section className="rounded-2xl border border-violet/25 bg-gradient-to-b from-violet/[.08] to-violet/[.02] p-4 sm:p-5 shadow-lg shadow-violet-500/5 backdrop-blur-sm">
       {/* Header */}
-      <div className="flex items-center gap-2 text-violet font-semibold text-xs tracking-wider uppercase">
-        <Sparkles size={16} />
-        <span>Daily challenge</span>
+      <div className="flex items-center justify-between text-xs tracking-wider">
+        <div className="flex items-center gap-2 text-violet font-semibold uppercase">
+          <Sparkles size={16} />
+          <span>Daily challenge</span>
+        </div>
+        {challenge.difficulty && (
+          <span
+            className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              challenge.difficulty === "easy"
+                ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                : "border border-amber-500/30 bg-amber-500/10 text-amber-400"
+            }`}
+          >
+            {challenge.difficulty}
+          </span>
+        )}
       </div>
 
       <h2 className="mt-2.5 text-base sm:text-lg font-bold text-white tracking-tight">

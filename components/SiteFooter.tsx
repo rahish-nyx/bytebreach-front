@@ -18,10 +18,6 @@ export function SiteFooter() {
             <p className="mt-3 text-xs leading-5 text-muted max-w-xs">
               Hands-on cybersecurity academy, enterprise networking certification tracks (CCNA, CCNP, CCIE), and gamified CTF battleground.
             </p>
-            <div className="mt-4 flex items-center gap-2 text-[11px] text-cyan font-mono">
-              <span className="inline-block h-2 w-2 rounded-full bg-cyan shadow-[0_0_8px_#22d3ee] animate-pulse" />
-              <span>NODES OPERATIONAL // 2026</span>
-            </div>
           </div>
 
           {/* Col 2: Learning Tracks */}
