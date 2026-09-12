@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "in.bytebreach.app",
+      "sha256_cert_fingerprints": [
+        "96:73:B1:8A:35:22:F9:08:73:D3:85:DC:EA:59:A8:4A:2D:60:F4:17:04:23:D2:C6:06:16:BC:63:65:10:D4:D9"
+      ]
+    }
+  }
+]
