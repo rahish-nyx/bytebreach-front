@@ -1,12 +1,13 @@
 "use client";
 
-import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { NotificationBell } from "@/components/NotificationBell";
+import { ProfileOption } from "@/components/ProfileOption";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export function StudentShell({ children }: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [platform, setPlatform] = useState<{ maintenanceMode?: boolean; announcementEnabled?: boolean; announcementText?: string }>({});
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -20,32 +21,29 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
-      {mobileOpen && (
-        <button
-          aria-label="Close navigation menu"
-          onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"
-        />
-      )}
-      <div className="fixed right-4 top-4 z-20 flex items-center gap-2 md:hidden">
+      <Sidebar />
+      
+      {/* Mobile Top-Right Header Actions: Notification Bell + Profile Option */}
+      <div className="fixed right-4 top-4 z-40 flex items-center gap-2.5 md:hidden">
         <NotificationBell />
-        <button
-          aria-label="Open menu"
-          onClick={() => setMobileOpen(true)}
-          className="flex md:hidden items-center justify-center p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition border border-line bg-panel/90 shadow-lg backdrop-blur"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
+        <ProfileOption />
       </div>
-      <main className="min-w-0 flex-1 pl-14 md:pl-0">
-        {platform.announcementEnabled && platform.announcementText && (
-          <div className="border-b border-cyan/30 bg-cyan/10 px-4 py-2 text-center text-xs font-semibold text-cyan">
-            {platform.announcementText}
-          </div>
-        )}
-        {children}
+
+      <main className="min-w-0 flex-1 pl-0 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-0 flex flex-col justify-between">
+        <div>
+          {platform.announcementEnabled && platform.announcementText && (
+            <div className="border-b border-cyan/30 bg-cyan/10 px-4 py-2 text-center text-xs font-semibold text-cyan">
+              {platform.announcementText}
+            </div>
+          )}
+          {children}
+        </div>
+        <SiteFooter />
       </main>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileBottomNav />
+
       {platform.maintenanceMode && !isAdmin && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-[#050911]/95 p-6 text-center backdrop-blur-md">
           <div className="max-w-lg rounded-2xl border border-cyan/40 bg-panel p-8 shadow-2xl">

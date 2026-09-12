@@ -3,7 +3,7 @@ import { adminDb } from "@/lib/firebaseAdmin";
 
 const staticPaths = ["/", "/learning-paths", "/practice-labs", "/resources", "/leaderboard", "/about", "/contact", "/faq", "/terms", "/disclaimer", "/careers", "/privacy", "/cookies"];
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
   const urls = staticPaths.map((path) => ({ url: `${base}${path}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: path === "/" ? 1 : 0.7 }));
   try {
     const firestore = adminDb;

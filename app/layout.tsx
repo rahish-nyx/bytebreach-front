@@ -6,6 +6,7 @@ import { adminDb } from "@/lib/firebaseAdmin";
 
 import { GoogleAdSense } from "@/components/GoogleAdSense";
 import { FloatingBreachBuddy } from "@/components/FloatingBreachBuddy";
+import { CookieBanner } from "@/components/CookieBanner";
 import { RouteGuard } from "@/components/RouteGuard";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -50,7 +51,7 @@ async function getSeo(): Promise<Seo> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeo();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
   const defaultTitle = "ByteBreach | Cybersecurity Academy & Practical CTF Labs";
   const defaultDescription =
     "Hands-on cybersecurity academy and gamified CTF battleground. Master CCNA, CCNP, CCIE networking tracks, ethical hacking, and real-world penetration testing with isolated practice labs.";
@@ -140,7 +141,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       : `ca-${rawPublisherId}`
     : "";
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
 
   const website = {
     "@context": "https://schema.org",
@@ -233,6 +234,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
+        {adsensePublisherId && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePublisherId}`}
+            crossOrigin="anonymous"
+          />
+        )}
         <script
           id="schema-structured-data"
           type="application/ld+json"
@@ -247,6 +255,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             {children}
           </RouteGuard>
           <FloatingBreachBuddy />
+          <CookieBanner />
         </AuthProvider>
       </body>
     </html>

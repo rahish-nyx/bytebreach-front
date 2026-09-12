@@ -9,7 +9,7 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState("");
   const [sending, setSending] = useState(false);
-  const [channels, setChannels] = useState({ telegramUrl: "https://t.me/ByteBreachBot", whatsappUrl: "https://wa.me/", supportEmail: "support@bytebreach.com" });
+  const [channels, setChannels] = useState({ telegramUrl: "https://t.me/ByteBreachBot", whatsappUrl: "https://wa.me/", supportEmail: "support@bytebreach.in" });
   useEffect(() => onSnapshot(doc(db, "system", "contacts"), (snapshot) => { if (snapshot.exists()) setChannels((current) => ({ ...current, ...snapshot.data() })); }), []);
   const submit = async (event: FormEvent) => {
     event.preventDefault(); setSending(true); setStatus("");

@@ -3,13 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Clock3, Flame, Menu, Play, Shield, Terminal, TrendingUp } from "lucide-react";
+import { ChevronRight, Clock3, Flame, Play, Shield, Terminal, TrendingUp } from "lucide-react";
 import { LOCAL_ADMIN_SESSION_KEY } from "@/lib/demoAuth";
 import { Sidebar } from "@/components/Sidebar";
 import { AdBanner } from "@/components/AdBanner";
 import { NotificationBell } from "@/components/NotificationBell";
 import { DailyChallenge } from "@/components/DailyChallenge";
 import { TrackCard } from "@/components/TrackCard";
+import { ByteBreachLogo } from "@/components/ByteBreachLogo";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { ProfileOption } from "@/components/ProfileOption";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useFirestoreCollection } from "@/hooks/useFirestoreCollection";
 import { useStudentProgress } from "@/hooks/useStudentProgress";
 import { useAuth } from "@/src/context/AuthContext";
@@ -37,7 +41,6 @@ const getGreeting = () => {
 
 export default function Dashboard() {
   const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedPath, setSelectedPath] = useState("all");
   const [greeting, setGreeting] = useState("Welcome");
   const { user } = useAuth();
@@ -135,7 +138,51 @@ export default function Dashboard() {
     void updateUserActivity(user.uid);
   }, [user]);
 
-  return <div className="grid-bg min-h-screen"><div className="flex min-h-screen"><Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)}/>{mobileOpen && <button aria-label="Close navigation menu" onClick={() => setMobileOpen(false)} className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"/>}<main className="min-w-0 flex-1 pl-14 md:pl-0"><header className="sticky top-0 z-20 flex min-h-[68px] items-center justify-between border-b border-line bg-ink/90 px-4 backdrop-blur md:h-[76px] md:px-10"><div className="text-sm font-semibold">Overview</div><div className="flex items-center gap-3"><NotificationBell/>{/* Profile Avatar visible only on desktop/tablet */}<div className="hidden md:flex items-center"><Link href={user ? "/profile" : "/login"} aria-label={user ? "Open profile" : "Sign in"} className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-violet to-cyan text-xs font-bold text-ink transition hover:opacity-90">{displayName.slice(0, 2).toUpperCase()}</Link></div>{/* Mobile Hamburger Button positioned on the right */}<button onClick={() => setMobileOpen(true)} className="flex md:hidden items-center justify-center p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition" aria-label="Open menu"><Menu className="h-6 w-6"/></button></div></header><div className="mx-auto max-w-[1500px] p-4 sm:p-5 md:p-10"><AdBanner label="ad slot · top banner"/><div className="mt-7 flex flex-col justify-between gap-5 sm:mt-8 lg:flex-row lg:items-end"><div><div className="eyebrow text-cyan">Your cyber journey</div><h1 className="mt-2 text-3xl font-bold tracking-tight text-white md:text-4xl">{greeting}, {user?.displayName || displayName || "Rez"} <span className="text-cyan">⌁</span></h1><p className="mt-2 text-sm text-muted">Choose a path, complete a room, and keep moving forward.</p></div>{nextModule ? <Link href={`/room/${nextModule.id}`} onClick={(e) => handleProtectedClick(`/room/${nextModule.id}`, e)} className="flex min-h-11 w-fit items-center gap-2 rounded-xl bg-cyan px-4 py-2.5 text-xs font-bold text-ink"><Play size={14} fill="currentColor"/> Continue learning</Link> : <Link href="/learning-paths" onClick={(e) => handleProtectedClick("/learning-paths", e)} className="flex min-h-11 w-fit items-center rounded-xl bg-cyan px-4 py-2.5 text-xs font-bold text-ink">Choose a path</Link>}</div>
+  return (
+    <div className="grid-bg min-h-screen">
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <main className="min-w-0 flex-1 pl-0 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-0">
+          <header className="sticky top-0 z-20 flex min-h-[64px] items-center justify-between border-b border-line bg-ink/95 px-4 backdrop-blur md:h-[76px] md:px-10">
+            <div className="flex items-center gap-2.5">
+              <ByteBreachLogo size={32} className="shrink-0 md:hidden" />
+              <div className="text-sm font-semibold">Dashboard</div>
+            </div>
+            <div className="flex items-center gap-3">
+              <NotificationBell />
+              <ProfileOption />
+            </div>
+          </header>
+          <div className="mx-auto max-w-[1500px] p-4 sm:p-5 md:p-10">
+            <AdBanner label="ad slot · top banner" />
+            <div className="mt-7 flex flex-col justify-between gap-5 sm:mt-8 lg:flex-row lg:items-end">
+              <div>
+                <div className="eyebrow text-cyan">Your cyber journey</div>
+                <h1 className="mt-2 text-3xl font-bold tracking-tight text-white md:text-4xl">
+                  {greeting}, {user?.displayName || displayName || "Rez"} <span className="text-cyan">⌁</span>
+                </h1>
+                <p className="mt-2 text-sm text-muted">
+                  Choose a path, complete a room, and keep moving forward.
+                </p>
+              </div>
+              {nextModule ? (
+                <Link
+                  href={`/room/${nextModule.id}`}
+                  onClick={(e) => handleProtectedClick(`/room/${nextModule.id}`, e)}
+                  className="flex min-h-11 w-fit items-center gap-2 rounded-xl bg-cyan px-4 py-2.5 text-xs font-bold text-ink"
+                >
+                  <Play size={14} fill="currentColor" /> Continue learning
+                </Link>
+              ) : (
+                <Link
+                  href="/learning-paths"
+                  onClick={(e) => handleProtectedClick("/learning-paths", e)}
+                  className="flex min-h-11 w-fit items-center rounded-xl bg-cyan px-4 py-2.5 text-xs font-bold text-ink"
+                >
+                  Choose a path
+                </Link>
+              )}
+            </div>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         <Metric
           onClick={(e) => handleProtectedClick("/", e)}
@@ -176,8 +223,102 @@ export default function Dashboard() {
           badgeClassName="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
         />
       </div>
-      <section className="mt-10"><div className="flex flex-wrap items-end justify-between gap-4"><div><div className="eyebrow">Choose your specialization</div><h2 className="mt-1 text-xl font-bold">Learning paths</h2></div><div className="flex flex-wrap gap-1 rounded-xl bg-panel p-1">{pathFilters.map((filter) => <button key={filter} onClick={() => setSelectedPath(filter)} className={`rounded-lg px-3 py-1.5 text-[11px] uppercase ${selectedPath === filter ? "bg-cyan font-bold text-ink" : "text-muted"}`}>{filter}</button>)}</div></div><div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">{visiblePaths.map((path) => <TrackCard key={path.id} {...path} />)}</div></section>
-      <div className="mt-10 grid gap-8 xl:grid-cols-[1fr_360px]"><section><div className="mb-4 flex items-end justify-between"><div><div className="eyebrow">Resume your path</div><h2 className="mt-1 text-xl font-bold">Recommended next modules</h2></div><Link href="/learning-paths" onClick={(e) => handleProtectedClick("/learning-paths", e)} className="text-xs text-cyan">View paths <ChevronRight size={13} className="inline"/></Link></div>{paths.filter((path) => path.completedModules >= path.totalModules && path.totalModules > 0).length > 0 && <div className="mb-4 rounded-2xl border border-cyan/20 bg-cyan/[.04] p-4"><div className="text-xs font-semibold text-cyan">Next track unlocked</div><div className="mt-1 text-sm text-white">Continue with {paths.find((path) => path.completedModules < path.totalModules)?.title || "your next specialization"}.</div></div>}<div className="space-y-3">{visibleModules.length ? visibleModules.slice(0, 4).map((item) => <Link href={`/room/${item.id}`} onClick={(e) => handleProtectedClick(`/room/${item.id}`, e)} key={item.id} className="glass flex items-center gap-4 rounded-2xl p-4 transition hover:border-cyan/40"><div className="grid h-10 w-10 place-items-center rounded-xl bg-cyan/10 text-cyan"><Terminal size={18}/></div><div className="min-w-0 flex-1"><div className="text-[10px] text-muted">{item.track} · {item.duration}</div><div className="mt-1 font-semibold">{item.title}</div><div className="mt-3 h-1.5 rounded-full bg-line"><div className="h-full rounded-full bg-cyan" style={{ width: `${item.progress}%` }}/></div></div><span className="text-xs text-cyan">{item.progress === 100 ? "Completed" : "Continue"} <ChevronRight size={14} className="inline"/></span></Link>) : <div className="rounded-2xl border border-dashed border-line p-8 text-center text-sm text-muted">Select a learning path to see recommended modules.</div>}</div></section><div className="space-y-4"><DailyChallenge/><AdBanner label="ad slot · sidebar"/></div>      </div></div>      </main></div></div>;
+      <section className="mt-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="eyebrow">Choose your specialization</div>
+            <h2 className="mt-1 text-xl font-bold">Learning paths</h2>
+          </div>
+          <div className="flex flex-wrap gap-1 rounded-xl bg-panel p-1">
+            {pathFilters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setSelectedPath(filter)}
+                className={`rounded-lg px-3 py-1.5 text-[11px] uppercase ${
+                  selectedPath === filter ? "bg-cyan font-bold text-ink" : "text-muted"
+                }`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
+          {visiblePaths.map((path) => (
+            <TrackCard key={path.id} {...path} />
+          ))}
+        </div>
+      </section>
+
+      <div className="mt-10 grid gap-8 xl:grid-cols-[1fr_360px]">
+        <section>
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <div className="eyebrow">Resume your path</div>
+              <h2 className="mt-1 text-xl font-bold">Recommended next modules</h2>
+            </div>
+            <Link
+              href="/learning-paths"
+              onClick={(e) => handleProtectedClick("/learning-paths", e)}
+              className="text-xs text-cyan"
+            >
+              View paths <ChevronRight size={13} className="inline" />
+            </Link>
+          </div>
+          {paths.filter((path) => path.completedModules >= path.totalModules && path.totalModules > 0).length > 0 && (
+            <div className="mb-4 rounded-2xl border border-cyan/20 bg-cyan/[.04] p-4">
+              <div className="text-xs font-semibold text-cyan">Next track unlocked</div>
+              <div className="mt-1 text-sm text-white">
+                Continue with {paths.find((path) => path.completedModules < path.totalModules)?.title || "your next specialization"}.
+              </div>
+            </div>
+          )}
+          <div className="space-y-3">
+            {visibleModules.length ? (
+              visibleModules.slice(0, 4).map((item) => (
+                <Link
+                  href={`/room/${item.id}`}
+                  onClick={(e) => handleProtectedClick(`/room/${item.id}`, e)}
+                  key={item.id}
+                  className="glass flex items-center gap-4 rounded-2xl p-4 transition hover:border-cyan/40"
+                >
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-cyan/10 text-cyan">
+                    <Terminal size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10px] text-muted">
+                      {item.track} · {item.duration}
+                    </div>
+                    <div className="mt-1 font-semibold">{item.title}</div>
+                    <div className="mt-3 h-1.5 rounded-full bg-line">
+                      <div className="h-full rounded-full bg-cyan" style={{ width: `${item.progress}%` }} />
+                    </div>
+                  </div>
+                  <span className="text-xs text-cyan">
+                    {item.progress === 100 ? "Completed" : "Continue"} <ChevronRight size={14} className="inline" />
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-line p-8 text-center text-sm text-muted">
+                Select a learning path to see recommended modules.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <div className="space-y-4">
+          <DailyChallenge />
+          <AdBanner label="ad slot · sidebar" />
+        </div>
+      </div>
+    </div>
+    <SiteFooter />
+  </main>
+      <MobileBottomNav />
+    </div>
+  </div>
+  );
 }
 
 function Metric({

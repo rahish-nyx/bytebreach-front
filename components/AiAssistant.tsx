@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
 import type { Route } from "next";
@@ -51,6 +52,19 @@ export function AiAssistant() {
     lastStudiedModuleTitle?: string;
     lastVisitedPath?: string;
   }>({});
+
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
+
+  // Close modal on Escape key press
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   const isLocalAdmin =
     typeof window !== "undefined" &&
@@ -243,17 +257,61 @@ export function AiAssistant() {
 
   return (
     <>
-      <button
+      {/* Invisible boundary container for drag constraints within safe viewport area */}
+      <div
+        ref={constraintsRef}
+        className="fixed inset-0 pointer-events-none z-50 p-3 pt-16 pb-20 md:pt-4 md:pb-4"
+      />
+
+      {/* Floating Draggable Breach Buddy Launcher Button */}
+      <motion.div
+        drag
+        dragConstraints={constraintsRef}
+        dragElastic={0.12}
+        dragMomentum={false}
+        onDragStart={() => {
+          isDraggingRef.current = true;
+        }}
+        onDragEnd={() => {
+          setTimeout(() => {
+            isDraggingRef.current = false;
+          }, 120);
+        }}
+        onClick={() => {
+          if (isDraggingRef.current) return;
+          setOpen((prev) => !prev);
+        }}
+        role="button"
+        tabIndex={0}
         aria-label={open ? "Close Breach Buddy AI assistant" : "Open Breach Buddy AI assistant"}
-        title="Breach Buddy AI"
-        onClick={() => setOpen(!open)}
-        className="group fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-50 grid h-14 w-14 place-items-center rounded-2xl bg-cyan text-ink shadow-[0_8px_32px_rgba(53,213,208,.35)] transition duration-200 hover:scale-105 sm:right-5"
+        title="Breach Buddy AI (Drag to float freely)"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((prev) => !prev);
+          }
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.94 }}
+        className="group fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom))] md:bottom-6 right-4 md:right-6 z-50 grid h-14 w-14 cursor-grab active:cursor-grabbing place-items-center rounded-2xl bg-cyan text-ink shadow-[0_8px_32px_rgba(53,213,208,.35)] select-none touch-none hover:shadow-[0_12px_36px_rgba(53,213,208,.5)] transition-shadow duration-200"
       >
-        {open ? <X size={24} /> : <Bot size={26} className="transition-transform group-hover:scale-110" />}
-      </button>
+        {open ? (
+          <X size={24} />
+        ) : (
+          <Bot size={26} className="transition-transform group-hover:scale-110" />
+        )}
+      </motion.div>
+
+      {/* Mobile Backdrop Overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm sm:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
       {open && (
-        <div className="fixed bottom-20 left-4 right-4 z-50 flex max-h-[min(75vh,600px)] flex-col overflow-hidden rounded-2xl border border-line bg-[#0d141e] shadow-2xl sm:bottom-24 sm:left-auto sm:right-5 sm:w-[min(380px,calc(100vw-2rem))]">
+        <div className="fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] sm:bottom-24 sm:inset-x-auto sm:right-6 sm:w-[380px] z-50 flex max-h-[min(74vh,600px)] flex-col overflow-hidden rounded-2xl border border-line bg-[#0d141e] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
           <div className="flex items-center gap-3 border-b border-line p-4">
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-violet/15 text-violet">
               <Bot size={19} />
@@ -266,6 +324,13 @@ export function AiAssistant() {
                 {isPublicOrLoggedOut ? "Public platform guide" : "Internal ByteBreach assistant"}
               </div>
             </div>
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close Breach Buddy"
+              className="ml-auto rounded-lg p-1.5 text-muted hover:bg-white/[.08] hover:text-white transition"
+            >
+              <X size={18} />
+            </button>
           </div>
 
           <div className="max-h-96 space-y-3 overflow-y-auto p-4">
