@@ -38,7 +38,7 @@ import { db } from "@/lib/firebaseConfig";
 import { getRankFromXp } from "@/src/lib/ranks";
 import { DAILY_CHALLENGE_XP } from "@/lib/submissions";
 import { DAILY_CHALLENGE_POOL, ChallengePoolItem } from "@/lib/dailyChallengePool";
-import { getCurrentCycleDate, getNextCycleRotationTime } from "@/lib/dailyChallengeScheduler";
+import { getCurrentCycleDate, getNextCycleRotationTime } from "@/lib/dailyChallengeUtils";
 
 type Submission = {
   id: string;
