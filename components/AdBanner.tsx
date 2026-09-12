@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useAdEnvironment } from "@/lib/adEnvironment";
+import { ADMOB_NATIVE_AD_UNIT_ID, requestNativeAd } from "@/services/admobService";
 
 type AdBannerProps = {
   slotId?: string;
@@ -14,13 +16,23 @@ declare global {
   }
 }
 
-export function AdBanner({ slotId, label = "sponsored learning tools", className = "" }: AdBannerProps) {
+export function AdBanner({
+  slotId,
+  label = "sponsored learning tools",
+  className = "",
+}: AdBannerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasWidth, setHasWidth] = useState(false);
+  const { isApp, isReady } = useAdEnvironment();
+
+  // AdSense Publisher ID (Client format: ca-pub-XXXXX)
   const rawPublisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID?.trim() || "";
   const formattedPublisherId = rawPublisherId
-    ? (rawPublisherId.startsWith("ca-") ? rawPublisherId : `ca-${rawPublisherId}`)
-    : "";
+    ? rawPublisherId.startsWith("ca-")
+      ? rawPublisherId
+      : `ca-${rawPublisherId}`
+    : "ca-pub-8726665576912950";
+
   const [configured, setConfigured] = useState(Boolean(formattedPublisherId && slotId));
   const adPushedRef = useRef(false);
 
@@ -34,8 +46,9 @@ export function AdBanner({ slotId, label = "sponsored learning tools", className
     return () => observer.disconnect();
   }, []);
 
+  // Web Browser: Push AdSense ad
   useEffect(() => {
-    if (!configured || !hasWidth || adPushedRef.current) return;
+    if (isApp || !configured || !hasWidth || adPushedRef.current) return;
     try {
       if (typeof window !== "undefined") {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -44,8 +57,49 @@ export function AdBanner({ slotId, label = "sponsored learning tools", className
     } catch {
       setConfigured(false);
     }
-  }, [configured, hasWidth]);
+  }, [isApp, configured, hasWidth]);
 
+  // Mobile Application: Request AdMob Native Ad
+  useEffect(() => {
+    if (!isApp || !hasWidth) return;
+    void requestNativeAd();
+  }, [isApp, hasWidth]);
+
+  // Mobile Application View: Render AdMob Native Ad Container
+  if (isReady && isApp) {
+    return (
+      <div
+        ref={containerRef}
+        className={`relative overflow-hidden rounded-2xl border border-cyan/20 bg-panel/80 p-4 transition-all hover:border-cyan/40 ${className}`}
+        data-admob-native-unit={ADMOB_NATIVE_AD_UNIT_ID}
+      >
+        <div className="flex items-center justify-between gap-2 border-b border-line/60 pb-2 text-[10px] uppercase tracking-wider text-muted">
+          <span className="flex items-center gap-1 font-mono text-cyan">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
+            Ad · Sponsored
+          </span>
+          <span className="text-[9px] text-muted/60 font-mono">ByteBreach App AdMob</span>
+        </div>
+
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="text-xs font-semibold text-white">Advanced Cybersecurity Labs & Certifications</div>
+            <div className="text-[11px] text-muted leading-relaxed">
+              Explore professional offensive security tools, cloud sandbox networks, and exam vouchers.
+            </div>
+          </div>
+          <a
+            href="/resources"
+            className="shrink-0 rounded-xl border border-cyan/40 bg-cyan/10 px-3 py-1.5 text-xs font-medium text-cyan hover:bg-cyan/20 transition-colors"
+          >
+            Learn More
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Web Browser: AdSense Unit or Placeholder
   if (!configured || !hasWidth) {
     return (
       <div
@@ -58,7 +112,10 @@ export function AdBanner({ slotId, label = "sponsored learning tools", className
   }
 
   return (
-    <div ref={containerRef} className={`overflow-hidden rounded-2xl border border-line bg-white/[.015] ${className}`}>
+    <div
+      ref={containerRef}
+      className={`overflow-hidden rounded-2xl border border-line bg-white/[.015] ${className}`}
+    >
       <ins
         className="adsbygoogle block min-h-[74px] w-full"
         style={{ display: "block" }}

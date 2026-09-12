@@ -44,19 +44,19 @@ export default function PrivacyPage() {
         </section>
 
         <section className="space-y-3 rounded-2xl border border-cyan/30 bg-cyan/5 p-5">
-          <h2 className="text-lg font-bold text-cyan">3. Google AdSense & Third-Party Advertising Disclosures</h2>
+          <h2 className="text-lg font-bold text-cyan">3. Google AdSense, Google AdMob & Advertising Disclosures</h2>
           <p>
-            To support free community access to our training tracks, cheat codes, and practice environments, ByteBreach displays third-party advertisements served by Google AdSense and its partners:
+            To support free community access to our training tracks, cheat codes, and practice environments, ByteBreach displays third-party advertisements served by Google AdSense (on our website) and Google AdMob (within our mobile applications and progressive app containers):
           </p>
           <ul className="list-disc pl-5 space-y-2 text-slate-200">
             <li>
-              <strong>Third-Party Vendor Cookies:</strong> Third-party vendors, including Google, use cookies to serve ads based on a user&rsquo;s prior visits to ByteBreach or other websites across the Internet.
+              <strong>Google AdSense (Web Browser Services):</strong> Third-party vendors, including Google, use cookies to serve ads based on a user&rsquo;s prior visits to ByteBreach or other websites across the Internet. Google&rsquo;s use of advertising cookies (such as the DoubleClick cookie) enables it and its partners to serve relevant ads to our web visitors.
             </li>
             <li>
-              <strong>DoubleClick & Advertising Cookies:</strong> Google&rsquo;s use of advertising cookies (such as the DoubleClick cookie) enables it and its partners to serve targeted, relevant ads to our users based on their visits to our site and/or other sites on the Internet.
+              <strong>Google AdMob (Mobile Application Services):</strong> For students accessing ByteBreach through our mobile application, installed PWA, or native wrappers, advertisements are powered by Google AdMob. AdMob may process non-sensitive device identifiers, such as the Google Advertising ID (GAID) or Identifier for Advertisers (IDFA), to serve contextual and interest-based mobile advertisements in accordance with Google Play Developer Program Policies.
             </li>
             <li>
-              <strong>Personalized Advertising Opt-Out:</strong> Users may opt out of personalized advertising by visiting{" "}
+              <strong>Personalized Advertising Opt-Out:</strong> Web visitors may opt out of personalized advertising by visiting{" "}
               <a
                 href="https://www.google.com/settings/ads"
                 target="_blank"
@@ -81,7 +81,7 @@ export default function PrivacyPage() {
                 className="text-cyan underline font-semibold"
               >
                 optout.networkadvertising.org
-              </a>.
+              </a>. Mobile app users can reset their advertising identifier or opt out of personalized ads directly within device settings (Android: Settings &gt; Google &gt; Ads &gt; Reset advertising ID / Delete advertising ID; iOS: Settings &gt; Privacy &amp; Security &gt; Tracking).
             </li>
           </ul>
         </section>

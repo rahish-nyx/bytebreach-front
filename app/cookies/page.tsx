@@ -33,12 +33,12 @@ export default function CookiesPage() {
             </div>
 
             <div className="rounded-xl border border-cyan/40 bg-cyan/5 p-4">
-              <h3 className="font-bold text-cyan">B. Advertising & Google AdSense Cookies</h3>
+              <h3 className="font-bold text-cyan">B. Advertising, Google AdSense & Google AdMob</h3>
               <p className="mt-1 text-xs text-slate-200 leading-5">
-                ByteBreach partners with Google AdSense to serve advertisements across our platform. Google and its third-party advertising partners use cookies (such as DoubleClick cookies) to serve ads based on your prior visits to ByteBreach or other websites on the Internet.
+                ByteBreach partners with Google AdSense (on web) and Google AdMob (on mobile applications) to serve advertisements that support free cybersecurity training. Google and its certified partners use cookies (such as DoubleClick cookies) and mobile device advertising identifiers to serve relevant ads based on prior browsing activity.
               </p>
               <p className="mt-2 text-xs text-slate-200 leading-5">
-                These cookies help show relevant advertisements and limit the number of times you see a specific ad.
+                These technologies help display relevant educational tools, prevent fraud, and limit the frequency of displayed advertisements.
               </p>
             </div>
 
