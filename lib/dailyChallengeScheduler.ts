@@ -123,18 +123,43 @@ export async function rotateDailyChallengeIfNeeded(options?: {
       }
     }
 
-    // Select the question from pool
-    let poolIndex = getQuestionIndexForCycle(currentCycle);
+    // Query Firestore pool collection first, falling back to static pool
+    let activePool: ChallengePoolItem[] = DAILY_CHALLENGE_POOL;
+    try {
+      const poolSnap = await adminDb.collection("dailyChallengePool").get();
+      if (!poolSnap.empty) {
+        activePool = poolSnap.docs.map((doc) => {
+          const d = doc.data();
+          return {
+            id: doc.id,
+            title: String(d.title || ""),
+            difficulty: (d.difficulty as "easy" | "medium") || "easy",
+            category: String(d.category || d.parentTopic || "General"),
+            scenario: String(d.scenario || ""),
+            prompt: String(d.prompt || ""),
+            instructions: String(d.instructions || ""),
+            hint: String(d.hint || ""),
+            answer: String(d.answer || ""),
+          };
+        });
+        activePool.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+      }
+    } catch {
+      // fallback to static DAILY_CHALLENGE_POOL
+    }
+
+    const poolLength = activePool.length > 0 ? activePool.length : 1;
+    let poolIndex = getQuestionIndexForCycle(currentCycle) % poolLength;
     if (typeof options?.forceNextIndex === "number") {
-      poolIndex = options.forceNextIndex % DAILY_CHALLENGE_POOL.length;
+      poolIndex = options.forceNextIndex % poolLength;
     }
 
     let question: ChallengePoolItem | undefined;
     if (options?.questionId) {
-      question = DAILY_CHALLENGE_POOL.find((q) => q.id === options.questionId);
+      question = activePool.find((q) => q.id === options.questionId);
     }
     if (!question) {
-      question = DAILY_CHALLENGE_POOL[poolIndex] || DAILY_CHALLENGE_POOL[0];
+      question = activePool[poolIndex] || activePool[0];
     }
 
     const payload = {
