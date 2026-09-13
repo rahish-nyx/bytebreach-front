@@ -27,17 +27,27 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
         router.replace("/login?error=unauthorized");
         return;
       }
-      if (process.env.NODE_ENV !== "production" && user.email === PRIMARY_ADMIN_EMAIL) {
-        setAllowed(true);
-        return;
-      }
       try {
-        const profile = await getUserProfile(user.uid);
-        if (profile?.role !== "admin") {
-          router.replace("/login?error=unauthorized");
+        // 1. Primary admin email verification
+        if (PRIMARY_ADMIN_EMAIL && user.email && user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase()) {
+          setAllowed(true);
           return;
         }
-        setAllowed(true);
+
+        // 2. Firebase Auth custom claims check
+        const tokenResult = await user.getIdTokenResult();
+        if (tokenResult.claims.admin === true || tokenResult.claims.role === "admin") {
+          setAllowed(true);
+          return;
+        }
+
+        // 3. Firestore profile role check
+        const profile = await getUserProfile(user.uid);
+        if (profile?.role === "admin") {
+          setAllowed(true);
+          return;
+        }
+        router.replace("/login?error=unauthorized");
       } catch {
         router.replace("/login?error=unauthorized");
       }

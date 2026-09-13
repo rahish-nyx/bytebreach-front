@@ -4,7 +4,7 @@
 
 export const LOCAL_ADMIN_EMAIL = process.env.NEXT_PUBLIC_LOCAL_ADMIN_EMAIL || "";
 export const LOCAL_ADMIN_PASSWORD = process.env.NEXT_PUBLIC_LOCAL_ADMIN_PASSWORD || "";
-export const PRIMARY_ADMIN_EMAIL = process.env.NEXT_PUBLIC_PRIMARY_ADMIN_EMAIL || "";
+export const PRIMARY_ADMIN_EMAIL = process.env.NEXT_PUBLIC_PRIMARY_ADMIN_EMAIL || "ikkaghostt@gmail.com";
 export const PRIMARY_ADMIN_PASSWORD = process.env.NEXT_PUBLIC_PRIMARY_ADMIN_PASSWORD || "";
 export const LOCAL_ADMIN_SESSION_KEY = "bytebreach-local-admin";
 

@@ -20,8 +20,8 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { auth } from "@/lib/firebaseConfig";
-import { upsertUserProfile } from "@/lib/firestore";
-import { isLocalAdminCredential, LOCAL_ADMIN_SESSION_KEY } from "@/lib/demoAuth";
+import { getUserProfile, upsertUserProfile } from "@/lib/firestore";
+import { isLocalAdminCredential, LOCAL_ADMIN_SESSION_KEY, PRIMARY_ADMIN_EMAIL } from "@/lib/demoAuth";
 import { useAuth } from "@/src/context/AuthContext";
 
 type Mode = "login" | "register" | "reset";
@@ -159,8 +159,24 @@ function LoginForm() {
       }
 
       // Default: regular login
-      await signInWithEmailAndPassword(auth, email, password);
-      router.replace(targetRedirect as any);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      document.cookie = "bb_session=1; path=/; max-age=2592000; SameSite=Lax";
+
+      let destination = targetRedirect;
+      if (destination === "/" || !destination || destination.includes("error=unauthorized")) {
+        try {
+          const profile = await getUserProfile(cred.user.uid);
+          const isPrimary = Boolean(PRIMARY_ADMIN_EMAIL && cred.user.email && cred.user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase());
+          if (profile?.role === "admin" || isPrimary) {
+            destination = "/admin";
+          } else {
+            destination = "/";
+          }
+        } catch {
+          destination = "/";
+        }
+      }
+      router.replace(destination as any);
     } catch (authError) {
       const code = authError instanceof Error ? authError.message : "";
       setError(

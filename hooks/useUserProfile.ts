@@ -50,9 +50,11 @@ export function useUserProfile() {
     });
   }, [user]);
 
-  const isPrimaryAdmin =
-    process.env.NODE_ENV !== "production" &&
-    Boolean(user?.email && user.email === PRIMARY_ADMIN_EMAIL);
+  const isPrimaryAdmin = Boolean(
+    PRIMARY_ADMIN_EMAIL &&
+    user?.email &&
+    user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase()
+  );
 
   const isAdmin = Boolean(profile?.role === "admin" || isLocalAdmin || isPrimaryAdmin);
 
