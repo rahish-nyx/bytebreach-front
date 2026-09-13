@@ -66,18 +66,22 @@ export function AiAssistant() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  const isLocalAdmin =
-    typeof window !== "undefined" &&
-    window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true";
+  const [isLocalAdmin, setIsLocalAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsLocalAdmin(
+      typeof window !== "undefined" &&
+      window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true"
+    );
+  }, []);
+
   const isAuthenticated = Boolean(user || isLocalAdmin);
   const isPublicOrLoggedOut = !isAuthenticated || pathname === "/login";
 
   const [messages, setMessages] = useState<Message[]>([
     {
       from: "bot",
-      text: isPublicOrLoggedOut
-        ? "I’m Breach Buddy, your ByteBreach guide. Explore platform policies, support, and documentation below, or sign in to access training tracks and labs."
-        : "I’m Breach Buddy, your internal ByteBreach assistant. Choose a guide or ask about your academy."
+      text: "I’m Breach Buddy, your ByteBreach guide. Explore platform policies, support, and documentation below, or sign in to access training tracks and labs."
     }
   ]);
 

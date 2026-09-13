@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,12 +14,17 @@ export function MobileBottomNav() {
   const pathname = usePathname() || "";
   const { user } = useAuth();
   const { isAdmin } = useUserProfile();
+  const [isLocalAdmin, setIsLocalAdmin] = useState(false);
 
-  const isLocalAdmin =
-    typeof window !== "undefined" &&
-    window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true";
+  useEffect(() => {
+    setIsLocalAdmin(
+      typeof window !== "undefined" &&
+      window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true"
+    );
+  }, []);
 
   const isAuthenticated = Boolean(user || isAdmin || isLocalAdmin);
+
 
   const navItems = [
     { label: "Dashboard", shortLabel: "Dashboard", icon: LayoutDashboard, href: "/" as Route, matchExact: true },
