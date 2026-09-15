@@ -89,32 +89,13 @@ export function DailyChallenge() {
     setBusy(true);
     setError("");
     try {
-      const form = new FormData();
-      form.append("studentName", name || user.displayName || "Operative");
-      form.append("studentEmail", user.email || "");
-      form.append("parentTopic", challenge?.parentTopic || "General");
-      form.append("challengeTitle", challenge?.title || "Daily challenge");
-      form.append("answer", answer.trim());
-      if (file) form.append("attachment", file, file.name);
-
-      const telegramResponse = await fetch("/api/telegram/notify", {
-        method: "POST",
-        body: form,
-      });
-
-      if (!telegramResponse.ok) {
-        const result = (await telegramResponse.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(result?.error || "Telegram delivery failed.");
-      }
-
-      const telegramResult = (await telegramResponse.json()) as { attachmentId?: string };
       const result = await submitDailyChallenge(
         user.uid,
         name || user.displayName || "Operative",
         user.email || "",
         challenge?.prompt || challenge?.title || "Daily challenge",
         answer.trim(),
-        telegramResult.attachmentId ? `telegram:${telegramResult.attachmentId}` : ""
+        file ? file.name : ""
       );
 
       if (result === "already-submitted") {
@@ -125,11 +106,25 @@ export function DailyChallenge() {
 
       setSubmitted(true);
       void updateUserActivity(user.uid);
+
+      // Asynchronously dispatch telegram notification without blocking the UI
+      const form = new FormData();
+      form.append("studentName", name || user.displayName || "Operative");
+      form.append("studentEmail", user.email || "");
+      form.append("parentTopic", challenge?.parentTopic || "General");
+      form.append("challengeTitle", challenge?.title || "Daily challenge");
+      form.append("answer", answer.trim());
+      if (file) form.append("attachment", file, file.name);
+
+      void fetch("/api/telegram/notify", {
+        method: "POST",
+        body: form,
+      }).catch((err) => console.warn("Telegram notification dispatched:", err));
     } catch (submissionError) {
       setError(
         submissionError instanceof Error
           ? submissionError.message
-          : "Submission failed. Check your Firebase Storage and Firestore rules."
+          : "Submission failed. Please check your network and try again."
       );
     } finally {
       setBusy(false);

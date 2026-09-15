@@ -163,11 +163,23 @@ function LoginForm() {
       document.cookie = "bb_session=1; path=/; max-age=2592000; SameSite=Lax";
 
       let destination = targetRedirect;
-      if (destination === "/" || !destination || destination.includes("error=unauthorized")) {
+      const isPrimaryAdmin = Boolean(
+        PRIMARY_ADMIN_EMAIL &&
+        cred.user.email &&
+        cred.user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase()
+      );
+
+      if (isPrimaryAdmin) {
+        destination = targetRedirect.startsWith("/admin") ? targetRedirect : "/admin";
+      } else if (!destination || destination === "/" || destination.includes("error=unauthorized")) {
+        // Quick non-blocking profile check with timeout
         try {
-          const profile = await getUserProfile(cred.user.uid);
-          const isPrimary = Boolean(PRIMARY_ADMIN_EMAIL && cred.user.email && cred.user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase());
-          if (profile?.role === "admin" || isPrimary) {
+          const profilePromise = getUserProfile(cred.user.uid);
+          const timeoutPromise = new Promise<{ role?: string }>((resolve) =>
+            setTimeout(() => resolve({ role: "student" }), 500)
+          );
+          const profile = await Promise.race([profilePromise, timeoutPromise]);
+          if (profile?.role === "admin") {
             destination = "/admin";
           } else {
             destination = "/";
@@ -176,7 +188,13 @@ function LoginForm() {
           destination = "/";
         }
       }
-      router.replace(destination as any);
+
+      if (typeof window !== "undefined") {
+        window.location.assign(destination);
+      } else {
+        router.replace(destination as any);
+      }
+      return;
     } catch (authError) {
       const code = authError instanceof Error ? authError.message : "";
       setError(

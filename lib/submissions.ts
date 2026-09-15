@@ -1,18 +1,29 @@
-import { arrayUnion, collection, doc, increment, runTransaction, serverTimestamp } from "firebase/firestore";
+import { arrayUnion, collection, doc, increment, runTransaction, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { getRankFromXp } from "@/src/lib/ranks";
 
 export const TASK_XP = 25;
 export const DAILY_CHALLENGE_XP = 50;
 
+let cachedRewards: { dailyChallengeXp?: number; roomCompletionXp?: number; practiceLabBaseXp?: number } | null = null;
+let cachedRewardsTime = 0;
+
 async function liveRewards() {
+  const now = Date.now();
+  if (cachedRewards && now - cachedRewardsTime < 60_000) {
+    return cachedRewards;
+  }
   try {
-    const response = await fetch("/api/settings/public", { cache: "no-store" });
-    if (response.ok) return await response.json() as { dailyChallengeXp?: number; roomCompletionXp?: number; practiceLabBaseXp?: number };
+    const response = await fetch("/api/settings/public");
+    if (response.ok) {
+      cachedRewards = (await response.json()) as { dailyChallengeXp?: number; roomCompletionXp?: number; practiceLabBaseXp?: number };
+      cachedRewardsTime = now;
+      return cachedRewards;
+    }
   } catch {
     // Defaults preserve progression if the settings service is temporarily unavailable.
   }
-  return {};
+  return cachedRewards || {};
 }
 
 function dateKey(date = new Date()) {
@@ -124,6 +135,26 @@ export async function submitLabFlag(
   lab: { id: string; title?: string; category?: string; flag?: string; presetFlag?: string; points?: number },
   submittedFlag: string
 ) {
+  const preset = String(lab.presetFlag || lab.flag || "");
+  const isCorrect = checkFlagMatch(submittedFlag, preset);
+
+  // If answer is incorrect, log non-blockingly and return immediately
+  if (!isCorrect) {
+    void setDoc(doc(collection(db, "labSubmissions")), {
+      userId: uid,
+      userHandle,
+      userEmail,
+      labId: lab.id,
+      labTitle: lab.title || lab.id,
+      category: lab.category || "Practice lab",
+      submittedFlag,
+      isCorrect: false,
+      xpAwarded: 0,
+      timestamp: serverTimestamp(),
+    }).catch(() => {});
+    return "incorrect" as const;
+  }
+
   const rewards = await liveRewards();
   return runTransaction(db, async (transaction) => {
     const userRef = doc(db, "users", uid);
@@ -137,11 +168,9 @@ export async function submitLabFlag(
       return "already-completed" as const;
     }
 
-    const preset = String(lab.presetFlag || lab.flag || "");
-    const isCorrect = checkFlagMatch(submittedFlag, preset);
     const points = Number(lab.points || rewards.practiceLabBaseXp || 0);
 
-    // Audit log each attempt
+    // Audit log successful attempt
     transaction.set(doc(collection(db, "labSubmissions")), {
       userId: uid,
       userHandle,
@@ -150,15 +179,10 @@ export async function submitLabFlag(
       labTitle: lab.title || lab.id,
       category: lab.category || "Practice lab",
       submittedFlag,
-      isCorrect,
-      xpAwarded: isCorrect ? points : 0,
+      isCorrect: true,
+      xpAwarded: points,
       timestamp: serverTimestamp(),
     });
-
-    // If answer is incorrect, do not complete lab; student can retry again and again
-    if (!isCorrect) {
-      return "incorrect" as const;
-    }
 
     // Award XP and permanently mark completed in student's profile
     const newXp = Number(data?.xp || 0) + points;

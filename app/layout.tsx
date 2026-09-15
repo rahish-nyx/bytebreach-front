@@ -160,12 +160,10 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const rawPublisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID?.trim() || "";
-  const adsensePublisherId = rawPublisherId
-    ? rawPublisherId.startsWith("ca-")
-      ? rawPublisherId
-      : `ca-${rawPublisherId}`
-    : "";
+  const rawPublisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID?.trim() || "ca-pub-8726665576912950";
+  const adsensePublisherId = rawPublisherId.startsWith("ca-")
+    ? rawPublisherId
+    : `ca-${rawPublisherId}`;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
 

@@ -34,8 +34,7 @@ export function Sidebar({ mobileOpen, onClose }: { mobileOpen?: boolean; onClose
 
   const handleSignOut = async () => {
     window.localStorage.removeItem(LOCAL_ADMIN_SESSION_KEY);
-    if (user) await logout();
-    router.replace("/login");
+    await logout();
   };
 
   const currentPath = pathname || "";
@@ -70,14 +69,11 @@ export function Sidebar({ mobileOpen, onClose }: { mobileOpen?: boolean; onClose
       <nav className="space-y-1">
         {links.map(({ label, icon: Icon, href }) => {
           const active = currentPath === href || (href !== "/" && currentPath.startsWith(href));
-          const targetHref = !user && !isAdmin && href !== "/"
-            ? (`/login?redirect=${encodeURIComponent(href)}` as Route)
-            : href;
 
           return (
             <Link
               key={label}
-              href={targetHref}
+              href={href}
               aria-label={label}
               className={`relative flex min-h-11 items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
                 active ? "bg-cyan/10 text-cyan" : "text-muted hover:bg-white/[.04] hover:text-white"

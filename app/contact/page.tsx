@@ -15,8 +15,17 @@ export default function ContactPage() {
     event.preventDefault(); setSending(true); setStatus("");
     try {
       await addDoc(collection(db, "inquiries"), { ...form, createdAt: serverTimestamp(), status: "unread" });
-      const response = await fetch("/api/telegram/notify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ inquiry: true, studentName: form.name, studentEmail: form.email, subject: form.subject, answer: form.message }) });
-      if (!response.ok) throw new Error("Inquiry saved, but Telegram notification failed.");
+      void fetch("/api/telegram/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          inquiry: true,
+          studentName: form.name,
+          studentEmail: form.email,
+          subject: form.subject,
+          answer: form.message
+        })
+      }).catch(() => {});
       setForm({ name: "", email: "", subject: "", message: "" });
       setStatus("Inquiry Transmitted. Uplink established with ByteBreach Command.");
     } catch (error) { setStatus(error instanceof Error ? error.message : "Could not transmit inquiry."); }

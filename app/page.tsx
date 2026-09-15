@@ -19,7 +19,7 @@ import { useStudentProgress } from "@/hooks/useStudentProgress";
 import { useAuth } from "@/src/context/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { doc, setDoc, where } from "firebase/firestore";
-import { db } from "@/lib/firebaseConfig";
+import { auth, db } from "@/lib/firebaseConfig";
 import { getTodayDateString, getYesterdayDateString, updateUserActivity } from "@/lib/activity";
 import { useLearningTimer } from "@/hooks/useLearningTimer";
 
@@ -62,8 +62,14 @@ export default function Dashboard() {
     const isLocalAdmin =
       typeof window !== "undefined" &&
       window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true";
+    const hasSession =
+      typeof document !== "undefined" && document.cookie.includes("bb_session=1");
+    const hasAuthUser =
+      typeof window !== "undefined" && Boolean(auth.currentUser);
 
-    if (!user && !isLocalAdmin) {
+    const isAuthed = Boolean(user || hasAuthUser || isLocalAdmin || hasSession);
+
+    if (!isAuthed && targetUrl.startsWith("/room/")) {
       e.preventDefault();
       router.push(`/login?redirect=${encodeURIComponent(targetUrl)}`);
     }
@@ -324,7 +330,6 @@ export default function Dashboard() {
             </div>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         <Metric
-          onClick={(e) => handleProtectedClick("/", e)}
           icon={
             <Flame
               size={18}
@@ -334,10 +339,9 @@ export default function Dashboard() {
           }
           label="Day streak"
           value={`${streak} days`}
-          badgeClassName="bg-amber-500/10 border border-amber-500/20 text-amber-400 shadow-[0_0_12px_rgba(249,115,22,0.25)]"
+          badgeClassName="border border-line bg-panel text-amber-400"
         />
         <Metric
-          onClick={(e) => handleProtectedClick("/", e)}
           icon={
             <Clock3
               size={18}
@@ -347,10 +351,9 @@ export default function Dashboard() {
           }
           label="Learning time"
           value={`${formattedHours} hours`}
-          badgeClassName="bg-cyan-500/10 border border-blue-500/20 text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.2)]"
+          badgeClassName="border border-line bg-panel text-cyan-400"
         />
         <Metric
-          onClick={(e) => handleProtectedClick("/", e)}
           icon={
             <Shield
               size={18}
@@ -359,7 +362,7 @@ export default function Dashboard() {
           }
           label="Labs completed"
           value={`${completedLabs} labs`}
-          badgeClassName="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
+          badgeClassName="border border-line bg-panel text-emerald-400"
         />
       </div>
       <section className="mt-10">
@@ -468,7 +471,7 @@ function Metric({
   label,
   value,
   onClick,
-  badgeClassName = "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.15)]",
+  badgeClassName = "border border-line bg-panel text-cyan-400",
 }: {
   icon: React.ReactNode;
   label: string;

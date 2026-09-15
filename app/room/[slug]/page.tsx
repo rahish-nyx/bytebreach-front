@@ -115,7 +115,7 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
       const awarded = await completeModule(auth.currentUser.uid, module.id, module.trackId || "", 25, Number.parseInt(module.duration || "30", 10) || 30);
       if (awarded) await saveModuleProgress(auth.currentUser.uid, module.id, { status: "completed", percent: 100 });
       setCompleted(true);
-      await showModuleCompletionAd();
+      void showModuleCompletionAd();
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not save room completion."); }
     finally { setFinishing(false); }
   };

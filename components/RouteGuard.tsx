@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
+import { auth } from "@/lib/firebaseConfig";
 import { ByteBreachLogo } from "@/components/ByteBreachLogo";
 import { LOCAL_ADMIN_SESSION_KEY } from "@/lib/demoAuth";
 
@@ -18,11 +19,18 @@ const PUBLIC_ROUTES = [
   "/disclaimer",
   "/privacy",
   "/cookies",
-  "/careers"
+  "/careers",
+  "/resources",
+  "/learning-paths",
+  "/practice-labs",
+  "/leaderboard"
 ];
 
 function isPublicRoute(pathname: string): boolean {
   if (PUBLIC_ROUTES.includes(pathname)) return true;
+  if (pathname.startsWith("/learning-paths")) return true;
+  if (pathname.startsWith("/practice-labs")) return true;
+  if (pathname.startsWith("/resources")) return true;
   if (pathname.startsWith("/api/")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname.includes(".")) return true; // Static assets like .ico, .svg, .png, .jpg
@@ -41,9 +49,14 @@ export function RouteGuard({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
+  const hasSession =
+    typeof document !== "undefined" && document.cookie.includes("bb_session=1");
+  const hasAuthUser =
+    typeof window !== "undefined" && Boolean(auth.currentUser);
+
   const isPublic = isPublicRoute(pathname);
   const isAdminRoute = pathname.startsWith("/admin");
-  const isAuthenticated = Boolean(user || isLocalAdmin);
+  const isAuthenticated = Boolean(user || hasAuthUser || isLocalAdmin || hasSession);
 
   useEffect(() => {
     // Whitelisted public routes and admin routes (managed by AdminGuard) pass through

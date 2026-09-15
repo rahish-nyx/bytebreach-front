@@ -1,9 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/src/context/AuthContext";
-import { LOCAL_ADMIN_SESSION_KEY } from "@/lib/demoAuth";
 
 export interface TrackCardProps {
   id: string;
@@ -85,24 +82,10 @@ export function TrackCard({
 }: TrackCardProps) {
   const progressPercent = Math.min(100, Math.max(0, percentage || 0));
   const logoStyle = getTrackLogoStyle({ id, title });
-  const router = useRouter();
-  const { user } = useAuth();
-
-  const handleClick = (e: React.MouseEvent) => {
-    const isLocalAdmin =
-      typeof window !== "undefined" &&
-      window.localStorage.getItem(LOCAL_ADMIN_SESSION_KEY) === "true";
-
-    if (!user && !isLocalAdmin) {
-      e.preventDefault();
-      router.push(`/login?redirect=${encodeURIComponent(`/learning-paths/${id}`)}`);
-    }
-  };
 
   return (
     <Link
       href={`/learning-paths/${id}`}
-      onClick={handleClick}
       className="flex flex-col justify-between h-full rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-cyan-500/40 hover:bg-slate-900/80 hover:shadow-lg hover:shadow-cyan-500/10"
     >
       {/* Top Content Grouping */}

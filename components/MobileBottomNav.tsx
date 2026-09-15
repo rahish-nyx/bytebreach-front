@@ -34,13 +34,6 @@ export function MobileBottomNav() {
     { label: "Leaderboard", shortLabel: "Ranks", icon: Trophy, href: "/leaderboard" as Route, matchExact: false },
   ];
 
-  const handleProtectedNavigation = (href: Route, e: React.MouseEvent) => {
-    if (!isAuthenticated && href !== "/") {
-      e.preventDefault();
-      router.push(`/login?redirect=${encodeURIComponent(href)}` as Route);
-    }
-  };
-
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
@@ -52,15 +45,10 @@ export function MobileBottomNav() {
             ? pathname === href
             : pathname === href || pathname.startsWith(`${href}/`);
 
-          const targetHref = !isAuthenticated && href !== "/"
-            ? (`/login?redirect=${encodeURIComponent(href)}` as Route)
-            : href;
-
           return (
             <Link
               key={href}
-              href={targetHref}
-              onClick={(e) => handleProtectedNavigation(href, e)}
+              href={href}
               aria-label={label}
               className={`group relative flex flex-col items-center justify-center rounded-xl py-1 px-0.5 text-center transition-all duration-200 active:scale-90 ${
                 active ? "text-cyan" : "text-slate-400 hover:text-slate-200"

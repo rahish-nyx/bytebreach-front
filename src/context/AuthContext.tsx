@@ -20,8 +20,12 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(() =>
+    typeof window !== "undefined" ? auth.currentUser : null
+  );
+  const [loading, setLoading] = useState<boolean>(() =>
+    typeof window !== "undefined" ? !auth.currentUser : true
+  );
 
   useEffect(() => {
     void setPersistence(auth, browserLocalPersistence);
@@ -49,8 +53,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       document.cookie = "bb_session=; path=/; max-age=0; SameSite=Lax";
       window.localStorage.removeItem("bytebreach-local-admin");
+      window.localStorage.removeItem("bytebreach-local-admin-session");
     }
-    await signOut(auth);
+    setUser(null);
+    try {
+      await signOut(auth);
+    } catch {}
+    if (typeof window !== "undefined") {
+      window.location.assign("/login");
+    }
   };
 
   const value = useMemo(
