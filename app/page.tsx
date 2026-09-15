@@ -312,6 +312,49 @@ export default function Dashboard() {
           <AdBanner label="ad slot · sidebar" />
         </div>
       </div>
+
+      {/* Academy Overview & Practical Curriculum (SEO & Learning Architecture) */}
+      <section className="mt-14 border-t border-line/60 pt-10">
+        <div className="eyebrow text-cyan">Academy Architecture & Cyber Warfare Readiness</div>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">
+          Hands-On Cybersecurity Training & Enterprise Network Engineering
+        </h2>
+        <p className="mt-3 max-w-4xl text-sm leading-relaxed text-slate-300">
+          ByteBreach Security Academy delivers an intensive, browser-accessible cyber battleground designed for aspiring network engineers, penetration testers, and security operatives. Rather than passive video lectures, every module immerses learners in interactive terminal simulations, live capture-the-flag (CTF) challenges, and realistic enterprise networking scenarios.
+        </p>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="rounded-2xl border border-line bg-panel p-5">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-cyan" />
+              Cisco Certified Networking Tracks
+            </h3>
+            <p className="mt-2 text-xs leading-relaxed text-slate-400">
+              Master enterprise routing and switching from foundational CCNA 200-301 to CCNP Enterprise and expert CCIE architectures. Build hands-on proficiency with OSPF, BGP, multi-area topologies, IPv4/IPv6 dual-stack addressing, VLAN segmentation, and automation scripts.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-line bg-panel p-5">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Defensive & Offensive CTF Arenas
+            </h3>
+            <p className="mt-2 text-xs leading-relaxed text-slate-400">
+              Engage with isolated cyber ranges that reflect actual breach tactics. Learn reconnaissance, web application exploitation (OWASP Top 10), binary triage, and Linux privilege escalation while validating flags in a secure, gamified scoring engine.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-line bg-panel p-5">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-indigo-400" />
+              Continuous Skill Telemetry & XP
+            </h3>
+            <p className="mt-2 text-xs leading-relaxed text-slate-400">
+              Track daily learning streaks, timed challenge sprints, and peer rankings on the global operative leaderboard. Gain verifiable competency through structured study rooms, comprehensive cheatsheets, and practical laboratory exercises.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
     <SiteFooter />
   </main>

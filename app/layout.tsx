@@ -52,17 +52,29 @@ async function getSeo(): Promise<Seo> {
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeo();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
-  const defaultTitle = "ByteBreach | Cybersecurity Academy & Practical CTF Labs";
+  // 56 characters — strictly in ideal 50-60 character range
+  const defaultTitle = "ByteBreach | Cybersecurity Training & Hands-On CTF Labs";
+  // 154 characters — strictly in ideal 150-160 character range
   const defaultDescription =
-    "Hands-on cybersecurity academy and gamified CTF battleground. Master CCNA, CCNP, CCIE networking tracks, ethical hacking, and real-world penetration testing with isolated practice labs.";
+    "Master hands-on cybersecurity, ethical hacking, CCNA to CCIE networking tracks, and real-world CTF challenges. Join ByteBreach Security Academy for free.";
+
+  const title =
+    seo.title && seo.title.length <= 60 && !seo.title.includes("Elite Cybersecurity Training & Hands-On CTF Labs")
+      ? seo.title
+      : defaultTitle;
+
+  const description =
+    seo.description && seo.description.length >= 130 && seo.description.length <= 165
+      ? seo.description
+      : defaultDescription;
 
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: seo.title || defaultTitle,
+      default: title,
       template: "%s | ByteBreach",
     },
-    description: seo.description || defaultDescription,
+    description: description,
     keywords: seo.keywords && seo.keywords.length > 0 ? seo.keywords : defaultKeywords,
     authors: [{ name: "ByteBreach Academy", url: siteUrl }],
     creator: "ByteBreach",
@@ -71,6 +83,10 @@ export async function generateMetadata(): Promise<Metadata> {
     generator: "Next.js",
     alternates: {
       canonical: seo.canonicalUrl || siteUrl,
+      languages: {
+        "en": siteUrl,
+        "x-default": siteUrl,
+      },
     },
     robots: {
       index: true,
@@ -96,8 +112,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     manifest: "/site.webmanifest",
     openGraph: {
-      title: seo.ogTitle || seo.title || defaultTitle,
-      description: seo.ogDescription || seo.description || defaultDescription,
+      title: seo.ogTitle || title,
+      description: seo.ogDescription || description,
       url: seo.canonicalUrl || siteUrl,
       siteName: "ByteBreach Security Academy",
       locale: "en_US",
@@ -113,8 +129,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: seo.ogTitle || seo.title || defaultTitle,
-      description: seo.ogDescription || seo.description || defaultDescription,
+      title: seo.ogTitle || title,
+      description: seo.ogDescription || description,
       images: [seo.ogImage || `${siteUrl}/og-image.png`],
       creator: "@bytebreach",
       site: "@bytebreach",
@@ -149,6 +165,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     name: "ByteBreach Security Academy",
     url: siteUrl,
     description: "Hands-on cybersecurity training, CCNA/CCNP/CCIE labs, and gamified CTF challenges.",
+    sameAs: [
+      "https://github.com/rahish-nyx/bytebreach-front",
+      "https://twitter.com/bytebreach",
+      "https://t.me/ByteBreachBot"
+    ],
     potentialAction: {
       "@type": "SearchAction",
       target: `${siteUrl}/resources?q={search_term_string}`,
@@ -234,6 +255,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
         <script
           id="schema-structured-data"
           type="application/ld+json"
