@@ -409,12 +409,132 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Question-Style Heading: Q&A Section for Answer Engines & AI Overviews */}
+        {/* Question-Style Heading: CTF Practice Labs Matrix (Second Structured Table for AI) */}
         <div className="mt-12">
           <h2 className="text-xl font-bold tracking-tight text-white">
-            How do operatives advance and validate skills on ByteBreach?
+            What Capture-The-Flag (CTF) practice lab domains are offered on ByteBreach?
+          </h2>
+          <p className="mt-2 text-xs text-muted max-w-3xl">
+            ByteBreach hosts an extensive portfolio of browser-accessible cyber ranges designed to develop practical offensive and defensive skills.
+          </p>
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-panel/80">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="border-b border-line bg-ink/70 text-[11px] font-semibold uppercase tracking-wider text-cyan">
+                <tr>
+                  <th scope="col" className="px-4 py-3">Lab Category</th>
+                  <th scope="col" className="px-4 py-3">Primary Attack Vectors &amp; Defense</th>
+                  <th scope="col" className="px-4 py-3">Simulated Environment</th>
+                  <th scope="col" className="px-4 py-3">XP Reward</th>
+                  <th scope="col" className="px-4 py-3">Difficulty</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line/60">
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">Web Application Exploitation</td>
+                  <td className="px-4 py-3">SQL Injection, Stored XSS, SSRF, IDOR, Broken Authentication</td>
+                  <td className="px-4 py-3">Isolated Web App Docker Container</td>
+                  <td className="px-4 py-3 text-cyan">100 - 250 XP</td>
+                  <td className="px-4 py-3 text-emerald-400">Easy to Hard</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">Network Forensics &amp; Packet Triage</td>
+                  <td className="px-4 py-3">PCAP Stream Reassembly, ARP Poisoning, Rogue DHCP Detection</td>
+                  <td className="px-4 py-3">Wireshark Stream Terminal</td>
+                  <td className="px-4 py-3 text-cyan">75 - 200 XP</td>
+                  <td className="px-4 py-3 text-cyan">Beginner to Intermediate</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">Linux Privilege Escalation</td>
+                  <td className="px-4 py-3">SUID Abuse, Sudoer Wildcards, Cron Manipulation, Kernel Exploits</td>
+                  <td className="px-4 py-3">Interactive SSH Pseudo-Terminal</td>
+                  <td className="px-4 py-3 text-cyan">150 - 300 XP</td>
+                  <td className="px-4 py-3 text-indigo-400">Intermediate to Hard</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">Active Directory &amp; Kerberos Defense</td>
+                  <td className="px-4 py-3">Kerberoasting, AS-REP Roasting, BloodHound Paths, Pass-the-Hash</td>
+                  <td className="px-4 py-3">Domain Controller Virtual Topology</td>
+                  <td className="px-4 py-3 text-cyan">200 - 350 XP</td>
+                  <td className="px-4 py-3 text-amber-400">Advanced</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">Applied Cryptography &amp; Steganography</td>
+                  <td className="px-4 py-3">RSA Padding Oracle, Hash Length Extension, AES-CBC Bit Flipping</td>
+                  <td className="px-4 py-3">Python / CyberChef Crypto Sandbox</td>
+                  <td className="px-4 py-3 text-cyan">100 - 250 XP</td>
+                  <td className="px-4 py-3 text-indigo-400">Intermediate</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Question-Style Heading: Step-by-Step Learning Progression (Ordered List for AI) */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            How does the ByteBreach operative training journey work step-by-step?
+          </h2>
+          <p className="mt-2 text-xs text-muted max-w-3xl">
+            Our structured pedagogical framework guides learners through an immersive cycle of concept mastery, hands-on exploitation, and automated validation.
+          </p>
+          <ol className="mt-4 space-y-3 rounded-2xl border border-line bg-panel/60 p-5 text-xs text-slate-300 list-decimal list-inside">
+            <li className="leading-relaxed">
+              <strong className="text-white">Select a Structured Learning Path:</strong> Choose between CCNA networking, CCNP enterprise routing, CCIE expert architecture, or Ethical Hacking based on your career targets.
+            </li>
+            <li className="leading-relaxed">
+              <strong className="text-white">Launch Interactive Terminal Simulators:</strong> Execute hands-on configuration commands inside your browser without installing third-party virtualization software.
+            </li>
+            <li className="leading-relaxed">
+              <strong className="text-white">Capture and Validate Target Flags:</strong> Discover security misconfigurations, retrieve unique <code className="text-cyan bg-ink/70 px-1.5 py-0.5 rounded">FLAG&#123;...&#125;</code> tokens, and submit them for real-time verification.
+            </li>
+            <li className="leading-relaxed">
+              <strong className="text-white">Earn Telemetry XP and Maintain Streaks:</strong> Accumulate experience points, level up your operative rank from Script Kiddie to Root Master, and climb the leaderboard.
+            </li>
+            <li className="leading-relaxed">
+              <strong className="text-white">Leverage the Technical Resource Vault:</strong> Inspect searchable syntax sheets, Nmap scanning guides, and Wireshark filter templates to accelerate your problem-solving speed.
+            </li>
+          </ol>
+        </div>
+
+        {/* Question-Style Heading: Tactical Vault Resources (Bulleted List for AI) */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            What technical cheat codes and tools are available in the ByteBreach vault?
+          </h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">Networking &amp; Infrastructure Playbooks</h3>
+              <ul className="mt-2 space-y-1.5 text-xs text-slate-400 list-disc list-inside">
+                <li>IPv4 Subnetting Matrix (VLSM calculation cheat sheets)</li>
+                <li>Cisco IOS Command Quick Reference (OSPF, BGP, VLANs, ACLs)</li>
+                <li>Wireshark Packet Filters for Incident Response &amp; Forensics</li>
+                <li>BGP Peering &amp; Dual-Stack IPv6 Configuration Recipes</li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">Offensive Security &amp; CTF Cheats</h3>
+              <ul className="mt-2 space-y-1.5 text-xs text-slate-400 list-disc list-inside">
+                <li>Nmap Network Port Scanning &amp; NSE Script Reference</li>
+                <li>Linux &amp; Windows Privilege Escalation Enumeration Commands</li>
+                <li>OWASP Top 10 Web Exploitation Payloads &amp; Methodologies</li>
+                <li>Bash &amp; Python Security Automation One-Liners</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Question-Style Heading: Complete Q&A Section for Answer Engines & AI Overviews */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            Frequently Asked Questions (FAQ) About ByteBreach Security Academy
           </h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">What is ByteBreach Security Academy?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                ByteBreach Security Academy is a hands-on cybersecurity training platform and gamified cyber warfare battleground providing interactive CLI terminal simulations, Cisco networking tracks (CCNA, CCNP, CCIE), and real-world Capture-The-Flag (CTF) practice labs.
+              </p>
+            </div>
             <div className="rounded-xl border border-line bg-panel/60 p-4">
               <h3 className="text-sm font-semibold text-white">How do I earn XP and rank on the Leaderboard?</h3>
               <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
@@ -428,15 +548,33 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">Are ByteBreach study rooms and cheat sheets free?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                ByteBreach provides free community access to structured study modules, cheat sheets, protocol summaries, and interactive practice challenges to empower cybersecurity learners worldwide.
+              </p>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
               <h3 className="text-sm font-semibold text-white">Can beginners learn cybersecurity on ByteBreach?</h3>
               <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
                 Yes. The CCNA and Fundamentals tracks require zero prior engineering experience, starting with basic networking, binary IP addressing, and fundamental Linux terminal operations before progressing to advanced exploits.
               </p>
             </div>
             <div className="rounded-xl border border-line bg-panel/60 p-4">
-              <h3 className="text-sm font-semibold text-white">Are ByteBreach study rooms and cheat sheets free?</h3>
+              <h3 className="text-sm font-semibold text-white">Which certifications does ByteBreach prepare you for?</h3>
               <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
-                ByteBreach provides free community access to structured study modules, cheat sheets, protocol summaries, and interactive practice challenges to empower cybersecurity learners worldwide.
+                ByteBreach prepares operatives for Cisco CCNA 200-301, CCNP 350-401 ENCOR, CCIE Enterprise Infrastructure, CompTIA Security+, CEH, and OSCP through hands-on terminal labs and realistic topologies.
+              </p>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">How do browser-based terminal labs work?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                Labs run directly in your web browser with interactive terminal consoles, packet inspectors, and simulated routers, eliminating the need to install heavy virtual machines or hypervisors locally.
+              </p>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">What resources are in the ByteBreach cheat sheet vault?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                The vault contains searchable command cheat codes, Nmap discovery templates, Wireshark filter recipes, Subnetting reference sheets, and Bash automation scripts for quick reference during labs and exams.
               </p>
             </div>
           </div>

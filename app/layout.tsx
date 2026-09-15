@@ -228,26 +228,66 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     mainEntity: [
       {
         "@type": "Question",
-        name: "How do I earn XP on ByteBreach?",
+        name: "What is ByteBreach Security Academy?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Daily Challenges award 50 XP, completed study rooms award 25 XP, and CTF practice labs award between 50 and 300 XP.",
+          text: "ByteBreach Security Academy is a hands-on cybersecurity training platform and gamified cyber warfare battleground providing interactive CLI terminal simulations, Cisco networking tracks (CCNA, CCNP, CCIE), and real-world Capture-The-Flag (CTF) practice labs.",
         },
       },
       {
         "@type": "Question",
-        name: "How are CTF flags validated?",
+        name: "How do I earn XP and rank on ByteBreach?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Flags are trimmed and compared case-insensitively in FLAG{...} format.",
+          text: "Daily Challenges award 50 XP, completed learning rooms award 25 XP, and hands-on CTF practice labs award between 50 and 300 XP. Consecutive logins build streak multipliers on the global operative leaderboard.",
         },
       },
       {
         "@type": "Question",
-        name: "Are the practice labs free to access?",
+        name: "How are CTF challenge flags validated?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes, ByteBreach provides free community access to structured study rooms, cheat sheets, and CTF practice labs.",
+          text: "Flags are submitted in standard FLAG{...} format and validated case-insensitively with automatic whitespace trimming through an instant verification engine.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Are ByteBreach practice labs and study rooms free?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, ByteBreach provides free community access to structured study modules, protocol cheat sheets, and hands-on CTF practice labs.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can beginners start learning cybersecurity on ByteBreach?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, foundational tracks like CCNA and Security Fundamentals require zero prior engineering experience, starting with basic networking, binary IP addressing, and Linux terminal operations before advancing to exploit techniques.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Which certifications does ByteBreach prepare you for?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "ByteBreach prepares operatives for Cisco CCNA 200-301, CCNP 350-401 ENCOR, CCIE Enterprise Infrastructure, CompTIA Security+, CEH, and OSCP through hands-on terminal labs and realistic topologies.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How do browser-based terminal labs work?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Labs run directly in your web browser with interactive terminal consoles, packet inspectors, and simulated routers, eliminating the need to install heavy virtual machines or hypervisors locally.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What resources are in the ByteBreach cheat sheet vault?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The vault contains searchable command cheat codes, Nmap discovery templates, Wireshark filter recipes, Subnetting reference sheets, and Bash automation scripts for quick reference during labs and exams.",
         },
       },
     ],
@@ -261,6 +301,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Academy Context" />
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
