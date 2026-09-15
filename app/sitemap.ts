@@ -18,7 +18,10 @@ const staticPaths = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
+  const rawBase = process.env.NEXT_PUBLIC_SITE_URL || "https://www.bytebreach.in";
+  const base = rawBase.includes("bytebreach.in") && !rawBase.includes("www.bytebreach.in")
+    ? rawBase.replace("bytebreach.in", "www.bytebreach.in")
+    : rawBase;
 
   const urls: MetadataRoute.Sitemap = staticPaths.map((path) => ({
     url: `${base}${path}`,

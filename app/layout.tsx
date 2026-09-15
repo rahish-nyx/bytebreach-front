@@ -52,7 +52,16 @@ async function getSeo(): Promise<Seo> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeo();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bytebreach.in";
+  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.bytebreach.in";
+  const siteUrl = rawSiteUrl.includes("bytebreach.in") && !rawSiteUrl.includes("www.bytebreach.in")
+    ? rawSiteUrl.replace("bytebreach.in", "www.bytebreach.in")
+    : rawSiteUrl;
+
+  let canonicalUrl = (seo.canonicalUrl || siteUrl).trim();
+  if (canonicalUrl.includes("bytebreach.in") && !canonicalUrl.includes("www.bytebreach.in")) {
+    canonicalUrl = canonicalUrl.replace("bytebreach.in", "www.bytebreach.in");
+  }
+  canonicalUrl = `${canonicalUrl.replace(/\/+$/, "")}/`;
   // 56 characters — strictly in ideal 50-60 character range
   const defaultTitle = "ByteBreach | Cybersecurity Training & Hands-On CTF Labs";
   // 154 characters — strictly in ideal 150-160 character range
@@ -83,10 +92,10 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: "ByteBreach",
     generator: "Next.js",
     alternates: {
-      canonical: seo.canonicalUrl || `${siteUrl.replace(/\/+$/, "")}/`,
+      canonical: canonicalUrl,
       languages: {
-        "en": `${siteUrl.replace(/\/+$/, "")}/`,
-        "x-default": `${siteUrl.replace(/\/+$/, "")}/`,
+        "en": canonicalUrl,
+        "x-default": canonicalUrl,
       },
     },
     robots: {
@@ -115,7 +124,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: seo.ogTitle || title,
       description: seo.ogDescription || description,
-      url: seo.canonicalUrl || siteUrl,
+      url: canonicalUrl,
       siteName: "ByteBreach Security Academy",
       locale: "en_US",
       type: "website",
