@@ -7,7 +7,7 @@ import { db } from "@/lib/firebaseConfig";
 
 type ContactSettings = { telegramUrl: string; whatsappUrl: string; supportEmail: string };
 type Inquiry = { id: string; name?: string; email?: string; subject?: string; message?: string; status?: string; createdAt?: { toDate?: () => Date } };
-const defaults: ContactSettings = { telegramUrl: "https://t.me/ByteBreachBot", whatsappUrl: "https://wa.me/", supportEmail: "support@bytebreach.in" };
+const defaults: ContactSettings = { telegramUrl: "https://t.me/ByteBreachBot", whatsappUrl: "https://wa.me/", supportEmail: "ikkaghostt@gmail.com" };
 
 export default function ContactsPage() {
   const [settings, setSettings] = useState(defaults);

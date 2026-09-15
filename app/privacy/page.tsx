@@ -119,8 +119,8 @@ export default function PrivacyPage() {
           </p>
           <p>
             To exercise any of these rights, contact our privacy officers directly at{" "}
-            <a href="mailto:support@bytebreach.in" className="text-cyan underline">
-              support@bytebreach.in
+            <a href="mailto:ikkaghostt@gmail.com" className="text-cyan underline">
+              ikkaghostt@gmail.com
             </a>.
           </p>
         </section>
@@ -139,7 +139,7 @@ export default function PrivacyPage() {
           </p>
           <div className="rounded-xl border border-line bg-panel p-4 font-mono text-xs text-slate-300">
             <p className="text-cyan font-bold">ByteBreach Security Academy</p>
-            <p>Email: support@bytebreach.in</p>
+            <p>Email: ikkaghostt@gmail.com</p>
             <p>Domain: https://bytebreach.in</p>
             <p>Contact Uplink: /contact</p>
           </div>

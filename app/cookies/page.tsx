@@ -103,8 +103,8 @@ export default function CookiesPage() {
               Privacy Policy
             </Link>{" "}
             or contact us at{" "}
-            <a href="mailto:support@bytebreach.in" className="text-cyan underline">
-              support@bytebreach.in
+            <a href="mailto:ikkaghostt@gmail.com" className="text-cyan underline">
+              ikkaghostt@gmail.com
             </a>.
           </p>
         </section>
