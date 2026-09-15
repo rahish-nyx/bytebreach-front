@@ -29,7 +29,10 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/api/"],
       },
     ],
-    sitemap: `${base}/sitemap.xml`,
+    sitemap: [
+      `${base}/sitemap.xml`,
+      `${base}/image-sitemap.xml`,
+    ],
     host: base,
   };
 }

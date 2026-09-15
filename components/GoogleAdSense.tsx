@@ -33,34 +33,61 @@ export function GoogleAdSense({ publisherId }: { publisherId?: string }) {
       return;
     }
 
-    // 3. Load asynchronously during browser idle time without Next.js 'data-nscript' attribute
-    // This completely eliminates the "AdSense head tag doesn't support data-nscript attribute" console warning
+    // 3. Load asynchronously upon first user interaction or idle timeout
+    // Prevents render-blocking 3rd-party script penalties during SEO crawler scans
+    // while providing fast ad delivery for real engaged visitors
+    let loaded = false;
+
     const loadScript = () => {
+      if (loaded) return;
       if (
         document.querySelector(
           `script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]`
         )
       ) {
+        loaded = true;
         return;
       }
+      loaded = true;
+
+      window.removeEventListener("scroll", loadScript);
+      window.removeEventListener("mousemove", loadScript);
+      window.removeEventListener("touchstart", loadScript);
+      window.removeEventListener("keydown", loadScript);
+      window.removeEventListener("click", loadScript);
+
       const script = document.createElement("script");
       script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${formatted}`;
       script.async = true;
+      script.defer = true;
       script.crossOrigin = "anonymous";
       document.head.appendChild(script);
     };
 
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const idleId = (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(loadScript, { timeout: 2000 });
-      return () => {
-        if ("cancelIdleCallback" in window) {
-          (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(idleId);
-        }
-      };
-    } else {
-      const timer = setTimeout(loadScript, 1000);
-      return () => clearTimeout(timer);
-    }
+    // Trigger on any human engagement
+    window.addEventListener("scroll", loadScript, { passive: true, once: true });
+    window.addEventListener("mousemove", loadScript, { passive: true, once: true });
+    window.addEventListener("touchstart", loadScript, { passive: true, once: true });
+    window.addEventListener("keydown", loadScript, { passive: true, once: true });
+    window.addEventListener("click", loadScript, { passive: true, once: true });
+
+    // Fallback: If no user interaction after 4.5 seconds, load in background idle
+    const fallbackTimer = setTimeout(() => {
+      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+        (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(loadScript, { timeout: 2500 });
+      } else {
+        loadScript();
+      }
+    }, 4500);
+
+    return () => {
+      clearTimeout(fallbackTimer);
+      window.removeEventListener("scroll", loadScript);
+      window.removeEventListener("mousemove", loadScript);
+      window.removeEventListener("touchstart", loadScript);
+      window.removeEventListener("keydown", loadScript);
+      window.removeEventListener("click", loadScript);
+    };
   }, [publisherId]);
 
   return null;

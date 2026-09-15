@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap;
+    src: local('Inter');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-display: swap;
+    src: local('JetBrains Mono');
+  }
+}
+
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
 body { margin: 0; background: #080b12; color: #eef4ff; font-family: var(--font-inter), sans-serif; }

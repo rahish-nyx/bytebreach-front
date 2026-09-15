@@ -9,8 +9,8 @@ import { FloatingBreachBuddy } from "@/components/FloatingBreachBuddy";
 import { CookieBanner } from "@/components/CookieBanner";
 import { RouteGuard } from "@/components/RouteGuard";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 type Seo = {
   title?: string;
@@ -255,12 +255,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+        <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com" />
+        <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
+        <link rel="preload" href="/bytebreach-logo.webp" as="image" type="image/webp" />
         <script
           id="schema-structured-data"
           type="application/ld+json"
