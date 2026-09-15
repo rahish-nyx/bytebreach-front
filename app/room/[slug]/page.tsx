@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { ArrowLeft, CheckCircle2, Flag, LockKeyhole, Play, Terminal } from "lucide-react";
 import { showModuleCompletionAd } from "@/services/admobService";
 import { completeModule, completeRoomLab, recordLearningActivity } from "@/lib/submissions";
@@ -41,12 +41,38 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
       setLoading(false);
     });
   }, [params]);
+
   useEffect(() => {
     if (!module || !auth.currentUser) return;
     const uid = auth.currentUser.uid;
+    const trackId = String(module.trackId || module.parentLabel || "").toLowerCase();
+
     void updateUserActivity(uid);
     void recordLearningActivity(uid);
-    void getDoc(doc(db, "users", uid, "progress", module.id)).then((snapshot) => setCompleted(snapshot.data()?.status === "completed"));
+
+    if (trackId) {
+      try {
+        window.localStorage.setItem("bytebreach_last_track", trackId);
+        window.localStorage.setItem("bytebreach_last_module", module.id);
+      } catch {}
+      void updateDoc(doc(db, "users", uid), {
+        lastActiveTrackId: trackId,
+        lastActiveModuleId: module.id,
+        lastActiveAt: serverTimestamp(),
+      }).catch(() => {});
+    }
+
+    void getDoc(doc(db, "users", uid, "progress", module.id)).then((snapshot) => {
+      const isDone = snapshot.data()?.status === "completed";
+      setCompleted(isDone);
+      if (!isDone) {
+        void saveModuleProgress(uid, module.id, {
+          status: "in_progress",
+          percent: Number(snapshot.data()?.percent || 20),
+        });
+      }
+    });
+
     const timer = window.setTimeout(() => setStudyDone(true), 8000);
     const onScroll = () => { if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight * 0.75) setStudyDone(true); };
     window.addEventListener("scroll", onScroll);

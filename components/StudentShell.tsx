@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { NotificationBell } from "@/components/NotificationBell";
 import { ProfileOption } from "@/components/ProfileOption";
@@ -8,6 +9,7 @@ import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export function StudentShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [platform, setPlatform] = useState<{ maintenanceMode?: boolean; announcementEnabled?: boolean; announcementText?: string }>({});
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -23,11 +25,13 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen">
       <Sidebar />
       
-      {/* Mobile Top-Right Header Actions: Notification Bell + Profile Option */}
-      <div className="fixed right-4 top-4 z-40 flex items-center gap-2.5 md:hidden">
-        <NotificationBell />
-        <ProfileOption />
-      </div>
+      {/* Mobile Top-Right Header Actions: Notification Bell + Profile Option (hide on /profile to prevent overlap) */}
+      {pathname !== "/profile" && (
+        <div className="fixed right-4 top-4 z-40 flex items-center gap-2.5 md:hidden">
+          <NotificationBell />
+          <ProfileOption />
+        </div>
+      )}
 
       <main className="min-w-0 flex-1 pl-0 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-0 flex flex-col justify-between">
         <div>

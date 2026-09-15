@@ -32,10 +32,10 @@ const fallbackPaths = [
 ];
 
 const defaultFallbackModules = [
-  { id: "ccna-subnetting", title: "IPv4 & IPv6 Subnetting Architecture", trackId: "ccna", track: "CCNA", duration: "25 min", progress: 0 },
-  { id: "cisco-ios-cli", title: "Cisco IOS Switch & Router Configuration", trackId: "ccna", track: "CCNA", duration: "30 min", progress: 0 },
-  { id: "wireshark-pcaps", title: "Network Packet Analysis with Wireshark", trackId: "ethical-hacking", track: "Ethical Hacking", duration: "20 min", progress: 0 },
-  { id: "routing-ospf", title: "Enterprise Single-Area OSPFv2 Routing", trackId: "ccnp-enterprise", track: "CCNP Enterprise", duration: "35 min", progress: 0 },
+  { id: "ccna-subnetting", title: "IPv4 & IPv6 Subnetting Architecture", trackId: "ccna", track: "CCNA", duration: "25 min", order: 1, progress: 0 },
+  { id: "cisco-ios-cli", title: "Cisco IOS Switch & Router Configuration", trackId: "ccna", track: "CCNA", duration: "30 min", order: 2, progress: 0 },
+  { id: "wireshark-pcaps", title: "Network Packet Analysis with Wireshark", trackId: "ccna", track: "CCNA", duration: "20 min", order: 3, progress: 0 },
+  { id: "routing-ospf", title: "Enterprise Single-Area OSPFv2 Routing", trackId: "ccna", track: "CCNA", duration: "35 min", order: 4, progress: 0 },
 ];
 
 const getGreeting = () => {
@@ -97,13 +97,143 @@ export default function Dashboard() {
       })
     : fallbackPaths;
   const visiblePaths = selectedPath === "all" ? paths : paths.filter((item) => item.id === selectedPath || item.title.toLowerCase().includes(selectedPath));
-  const visibleModules = useMemo(() => {
-    const list = modules.length
-      ? modules.filter((item) => item.published !== false).map((item) => ({ id: item.id, title: String(item.title || item.id), trackId: String(item.trackId || ""), track: paths.find((path) => path.id === item.trackId)?.title || String(item.trackId || "Learning path"), progress: Number(progress.find((entry) => entry.id === item.id)?.percent ?? item.progress ?? 0), duration: String(item.duration || `${item.durationMinutes || 0} min`) }))
-      : defaultFallbackModules;
-    return selectedPath === "all" ? list : list.filter((item) => item.trackId === selectedPath);
-  }, [modules, paths, progress, selectedPath]);
-  const nextModule = visibleModules.find((item) => item.progress < 100) || visibleModules[0];
+
+  // Determine the student's active track based on filter, profile recency, progress activity, or progression
+  const activeTrack = useMemo(() => {
+    // 1. Explicit dashboard selection
+    if (selectedPath !== "all") {
+      const found = paths.find((p) => p.id === selectedPath || p.title.toLowerCase().includes(selectedPath));
+      if (found) return found;
+    }
+
+    // 2. Profile lastActiveTrackId from Firestore
+    const profileLastTrack = (profile as any)?.lastActiveTrackId;
+    if (profileLastTrack) {
+      const found = paths.find(
+        (p) =>
+          p.id.toLowerCase() === String(profileLastTrack).toLowerCase() ||
+          p.title.toLowerCase() === String(profileLastTrack).toLowerCase()
+      );
+      if (found) return found;
+    }
+
+    // 3. Most recent progress activity
+    if (progress.length > 0 && modules.length > 0) {
+      const sorted = [...progress].sort((a, b) => {
+        const timeA = (a.lastViewedAt as any)?.seconds ?? (a.completedAt as any)?.seconds ?? 0;
+        const timeB = (b.lastViewedAt as any)?.seconds ?? (b.completedAt as any)?.seconds ?? 0;
+        return timeB - timeA;
+      });
+      for (const p of sorted) {
+        const mod = modules.find((m) => m.id === p.id);
+        const modTrack = String(mod?.trackId || mod?.parentLabel || "").toLowerCase();
+        if (modTrack) {
+          const found = paths.find(
+            (path) => path.id.toLowerCase() === modTrack || path.title.toLowerCase().includes(modTrack)
+          );
+          if (found) return found;
+        }
+      }
+    }
+
+    // 4. LocalStorage fallback
+    if (typeof window !== "undefined") {
+      try {
+        const localTrack = window.localStorage.getItem("bytebreach_last_track");
+        if (localTrack) {
+          const found = paths.find(
+            (p) =>
+              p.id.toLowerCase() === localTrack.toLowerCase() ||
+              p.title.toLowerCase().includes(localTrack.toLowerCase())
+          );
+          if (found) return found;
+        }
+      } catch {}
+    }
+
+    // 5. User completed modules fallback
+    if (userCompleted.length > 0 && modules.length > 0) {
+      for (const compId of userCompleted) {
+        const mod = modules.find((m) => m.id === compId);
+        const modTrack = String(mod?.trackId || mod?.parentLabel || "").toLowerCase();
+        if (modTrack) {
+          const found = paths.find(
+            (p) => p.id.toLowerCase() === modTrack || p.title.toLowerCase().includes(modTrack)
+          );
+          if (found) return found;
+        }
+      }
+    }
+
+    // 6. Default to first path with uncompleted modules, or CCNA
+    return paths.find((p) => p.completedModules < p.totalModules) || paths[0] || fallbackPaths[0];
+  }, [selectedPath, paths, profile, progress, modules, userCompleted]);
+
+  // Sequential recommended modules for the active track (Module 1 -> Module 2 -> Module 3...)
+  const recommendedModules = useMemo(() => {
+    const targetTrackId = activeTrack?.id || "ccna";
+
+    if (!modules.length) {
+      return defaultFallbackModules.map((item) => ({
+        ...item,
+        track: activeTrack?.title || item.track,
+      }));
+    }
+
+    // Filter published modules matching the active track
+    const trackModules = modules
+      .filter(
+        (item) =>
+          item.published !== false &&
+          (String(item.trackId || "").toLowerCase() === targetTrackId.toLowerCase() ||
+            String(item.parentLabel || "").toLowerCase() === targetTrackId.toLowerCase() ||
+            (targetTrackId === "ccna" && !item.trackId))
+      )
+      .map((item, index) => {
+        const prog = progress.find((entry) => entry.id === item.id);
+        const isCompleted =
+          userCompleted.includes(item.id) ||
+          prog?.status === "completed" ||
+          Number(prog?.percent ?? 0) === 100;
+        const progressPercent = isCompleted ? 100 : Number(prog?.percent ?? item.progress ?? 0);
+        const order = typeof item.order === "number" ? item.order : index + 1;
+
+        return {
+          id: item.id,
+          title: String(item.title || item.id),
+          trackId: targetTrackId,
+          track: activeTrack?.title || String(item.parentLabel || item.trackId || "Learning path"),
+          duration: String(item.duration || `${item.durationMinutes || 0} min`),
+          order,
+          progress: progressPercent,
+          isCompleted,
+          status: prog?.status || (isCompleted ? "completed" : "not_started"),
+        };
+      });
+
+    // Strictly sort by curriculum order
+    trackModules.sort((a, b) => a.order - b.order);
+
+    if (!trackModules.length) {
+      return defaultFallbackModules.map((item) => ({
+        ...item,
+        track: activeTrack?.title || item.track,
+      }));
+    }
+
+    // Find uncompleted modules in sequential order
+    const uncompleted = trackModules.filter((m) => !m.isCompleted);
+
+    // If student has uncompleted modules, recommend them sequentially (e.g. Module 2, 3, 4, 5...)
+    if (uncompleted.length > 0) {
+      return uncompleted.slice(0, 4);
+    }
+
+    // If all modules in this track are completed, show the last completed modules in order
+    return trackModules.slice(0, 4);
+  }, [modules, activeTrack, progress, userCompleted]);
+
+  const nextModule = recommendedModules.find((item) => item.progress < 100) || recommendedModules[0];
   useLearningTimer(user?.uid);
 
   const streak = useMemo(() => {
@@ -263,7 +393,9 @@ export default function Dashboard() {
         <section>
           <div className="mb-4 flex items-end justify-between">
             <div>
-              <div className="eyebrow">Resume your path</div>
+              <div className="eyebrow text-cyan">
+                Resume your path · {activeTrack?.title || "CCNA"}
+              </div>
               <h2 className="mt-1 text-xl font-bold">Recommended next modules</h2>
             </div>
             <Link
@@ -283,8 +415,8 @@ export default function Dashboard() {
             </div>
           )}
           <div className="space-y-3">
-            {visibleModules.length ? (
-              visibleModules.slice(0, 4).map((item) => (
+            {recommendedModules.length ? (
+              recommendedModules.slice(0, 4).map((item) => (
                 <Link
                   href={`/room/${item.id}`}
                   onClick={(e) => handleProtectedClick(`/room/${item.id}`, e)}
@@ -296,15 +428,16 @@ export default function Dashboard() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="text-[10px] text-muted">
-                      {item.track} · {item.duration}
+                      {item.track} · Module {item.order} · {item.duration}
                     </div>
                     <div className="mt-1 font-semibold">{item.title}</div>
                     <div className="mt-3 h-1.5 rounded-full bg-line">
                       <div className="h-full rounded-full bg-cyan" style={{ width: `${item.progress}%` }} />
                     </div>
                   </div>
-                  <span className="text-xs text-cyan">
-                    {item.progress === 100 ? "Completed" : "Continue"} <ChevronRight size={14} className="inline" />
+                  <span className="text-xs text-cyan flex items-center gap-1 shrink-0 font-medium">
+                    {item.progress === 100 ? "Review" : item.progress > 0 ? "Resume" : "Start"}{" "}
+                    <ChevronRight size={14} className="inline" />
                   </span>
                 </Link>
               ))

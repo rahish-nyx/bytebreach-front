@@ -8,6 +8,7 @@ import { ArrowLeft, Download, LogOut, Settings, Shield, Smartphone, Star, Trophy
 import { useAuth } from "@/src/context/AuthContext";
 import { db } from "@/lib/firebaseConfig";
 import { StudentShell } from "@/components/StudentShell";
+import { NotificationBell } from "@/components/NotificationBell";
 import { getRankTier } from "@/src/lib/ranks";
 import { useStudentProgress } from "@/hooks/useStudentProgress";
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -75,19 +76,23 @@ export default function ProfilePage() {
               <a
                 href="/bytebreach.apk"
                 download="ByteBreach.apk"
-                className="flex min-h-10 items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-400 transition shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                className="flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-400 transition shadow-[0_0_15px_rgba(16,185,129,0.15)]"
                 title="Download ByteBreach Android APK"
               >
                 <Smartphone size={14} />
-                <span>Download APK</span>
+                <span>APK</span>
               </a>
+
+              <div className="flex items-center">
+                <NotificationBell />
+              </div>
 
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="flex min-h-10 items-center gap-2 rounded-xl border border-cyan/40 bg-cyan/10 px-3 py-2 text-xs font-semibold text-cyan hover:bg-cyan/20 transition"
+                  className="flex min-h-10 items-center gap-1.5 rounded-xl border border-cyan/40 bg-cyan/10 px-3 py-2 text-xs font-semibold text-cyan hover:bg-cyan/20 transition"
                 >
-                  <Settings size={14} /> Admin console
+                  <Settings size={14} /> <span className="hidden sm:inline">Admin</span>
                 </Link>
               )}
               <button
@@ -95,9 +100,9 @@ export default function ProfilePage() {
                   await logout();
                   router.replace("/login");
                 }}
-                className="flex min-h-10 items-center gap-2 rounded-xl border border-line px-3 py-2 text-xs text-muted hover:border-red-400 hover:text-red-300"
+                className="flex min-h-10 items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-xs text-muted hover:border-red-400 hover:text-red-300 transition"
               >
-                <LogOut size={14} /> Sign out
+                <LogOut size={14} /> <span>Sign out</span>
               </button>
             </div>
           </header>
