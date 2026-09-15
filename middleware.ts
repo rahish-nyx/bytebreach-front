@@ -18,6 +18,15 @@ const PUBLIC_PREFIXES = [
 ];
 
 export function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "";
+  if (host.startsWith("www.bytebreach.in")) {
+    const url = request.nextUrl.clone();
+    url.host = "bytebreach.in";
+    url.protocol = "https:";
+    url.port = "";
+    return NextResponse.redirect(url, { status: 301 });
+  }
+
   const { pathname, search } = request.nextUrl;
 
   // Allow visitors to land first on home page overview dashboard

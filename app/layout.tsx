@@ -5,6 +5,7 @@ import { AuthProvider } from "@/src/context/AuthContext";
 import { adminDb } from "@/lib/firebaseAdmin";
 
 import { GoogleAdSense } from "@/components/GoogleAdSense";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { FloatingBreachBuddy } from "@/components/FloatingBreachBuddy";
 import { CookieBanner } from "@/components/CookieBanner";
 import { RouteGuard } from "@/components/RouteGuard";
@@ -168,7 +169,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     sameAs: [
       "https://github.com/rahish-nyx/bytebreach-front",
       "https://twitter.com/bytebreach",
-      "https://t.me/ByteBreachBot"
+      "https://t.me/ByteBreachBot",
+      "https://www.linkedin.com/company/bytebreach",
+      "https://www.youtube.com/@ByteBreach"
     ],
     potentialAction: {
       "@type": "SearchAction",
@@ -185,8 +188,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
     sameAs: [
-      "https://github.com/ByteBreach",
-      "https://twitter.com/bytebreach"
+      "https://github.com/rahish-nyx/bytebreach-front",
+      "https://twitter.com/bytebreach",
+      "https://t.me/ByteBreachBot",
+      "https://www.linkedin.com/company/bytebreach",
+      "https://www.youtube.com/@ByteBreach"
     ],
     hasCourse: [
       {
@@ -270,6 +276,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+        <GoogleAnalytics />
         <GoogleAdSense publisherId={adsensePublisherId} />
         <AuthProvider>
           <RouteGuard>

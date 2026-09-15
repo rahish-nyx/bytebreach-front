@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { AlertTriangle, ArrowLeft, BookOpen, Home, Terminal } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "404: Page Not Found | ByteBreach Security Academy",
+  description: "The requested tactical resource, study room, or route could not be found on ByteBreach.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function NotFound() {
   return (
@@ -25,8 +35,11 @@ export default function NotFound() {
           </div>
 
           <h1 className="mt-6 text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            Target Node Not Found
+            404 - Page Not Found
           </h1>
+          <p className="mt-1 text-xs font-mono text-cyan">
+            TARGET NODE NOT FOUND // BREACH TERMINATED
+          </p>
 
           <p className="mt-3 text-sm leading-6 text-muted">
             The requested tactical resource, study room, or route could not be reached. The endpoint may have been decommissioned, relocated, or entered incorrectly.

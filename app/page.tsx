@@ -313,16 +313,17 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Academy Overview & Practical Curriculum (SEO & Learning Architecture) */}
+      {/* Academy Overview & Practical Curriculum (SEO & AI Answer Engine Optimization) */}
       <section className="mt-14 border-t border-line/60 pt-10">
         <div className="eyebrow text-cyan">Academy Architecture & Cyber Warfare Readiness</div>
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">
-          Hands-On Cybersecurity Training & Enterprise Network Engineering
+          What is ByteBreach Security Academy?
         </h2>
         <p className="mt-3 max-w-4xl text-sm leading-relaxed text-slate-300">
-          ByteBreach Security Academy delivers an intensive, browser-accessible cyber battleground designed for aspiring network engineers, penetration testers, and security operatives. Rather than passive video lectures, every module immerses learners in interactive terminal simulations, live capture-the-flag (CTF) challenges, and realistic enterprise networking scenarios.
+          ByteBreach Security Academy is a high-intensity, browser-accessible cyber battleground engineered for aspiring network security specialists, penetration testers, and enterprise network engineers. Unlike passive video tutorials, ByteBreach immerses learners in interactive terminal simulations, live capture-the-flag (CTF) challenges, and realistic enterprise networking scenarios from day one.
         </p>
 
+        {/* Feature Cards */}
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           <div className="rounded-2xl border border-line bg-panel p-5">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
@@ -352,6 +353,92 @@ export default function Dashboard() {
             <p className="mt-2 text-xs leading-relaxed text-slate-400">
               Track daily learning streaks, timed challenge sprints, and peer rankings on the global operative leaderboard. Gain verifiable competency through structured study rooms, comprehensive cheatsheets, and practical laboratory exercises.
             </p>
+          </div>
+        </div>
+
+        {/* Question-Style Heading: Learning Track Matrix (Structured Table for AI Citing) */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            Which cybersecurity and networking tracks does ByteBreach offer?
+          </h2>
+          <p className="mt-2 text-xs text-muted max-w-3xl">
+            Explore our curriculum paths designed to take operatives from foundational networking concepts to expert offensive and defensive cyber operations.
+          </p>
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-panel/80">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="border-b border-line bg-ink/70 text-[11px] font-semibold uppercase tracking-wider text-cyan">
+                <tr>
+                  <th scope="col" className="px-4 py-3">Curriculum Track</th>
+                  <th scope="col" className="px-4 py-3">Skill Level</th>
+                  <th scope="col" className="px-4 py-3">Key Technical Domains</th>
+                  <th scope="col" className="px-4 py-3">Practical Lab Focus</th>
+                  <th scope="col" className="px-4 py-3">Target Certification</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line/60">
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">CCNA Network Associate</td>
+                  <td className="px-4 py-3 text-cyan">Beginner</td>
+                  <td className="px-4 py-3">IPv4/IPv6, Subnetting, VLANs, OSPFv2, NAT, Wireless</td>
+                  <td className="px-4 py-3">CLI Router &amp; Switch Configuration</td>
+                  <td className="px-4 py-3 text-slate-400">Cisco CCNA 200-301</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">CCNP Enterprise</td>
+                  <td className="px-4 py-3 text-indigo-400">Advanced</td>
+                  <td className="px-4 py-3">Dual-Stack Routing, BGP, Multicast, QoS, SD-WAN, Automation</td>
+                  <td className="px-4 py-3">Enterprise Multi-Area Topologies</td>
+                  <td className="px-4 py-3 text-slate-400">Cisco 350-401 ENCOR</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">CCIE Enterprise Infrastructure</td>
+                  <td className="px-4 py-3 text-amber-400">Expert</td>
+                  <td className="px-4 py-3">Complex Packet Analysis, Border Gateways, Zero Trust Architecture</td>
+                  <td className="px-4 py-3">Mission-Critical Live Diagnostics</td>
+                  <td className="px-4 py-3 text-slate-400">Cisco CCIE Lab Exam</td>
+                </tr>
+                <tr className="hover:bg-cyan/5 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-white">Ethical Hacking &amp; Penetration Testing</td>
+                  <td className="px-4 py-3 text-emerald-400">Intermediate</td>
+                  <td className="px-4 py-3">OWASP Top 10, Port Scanning, Metasploit, PrivEsc, Web Shells</td>
+                  <td className="px-4 py-3">Capture-The-Flag (CTF) Cyber Ranges</td>
+                  <td className="px-4 py-3 text-slate-400">CompTIA PenTest+, CEH, OSCP</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Question-Style Heading: Q&A Section for Answer Engines & AI Overviews */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            How do operatives advance and validate skills on ByteBreach?
+          </h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">How do I earn XP and rank on the Leaderboard?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                Daily Challenges award 50 XP, completed learning rooms award 25 XP, and hands-on CTF practice labs award between 50 and 300 XP depending on lab difficulty. Consecutive logins build learning streak multipliers.
+              </p>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">How are Capture-The-Flag (CTF) flags validated?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                Flags are submitted in standard FLAG&#123;...&#125; format. Our automated verification engine trims whitespace and validates submissions case-insensitively, instantly updating your profile telemetry.
+              </p>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">Can beginners learn cybersecurity on ByteBreach?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                Yes. The CCNA and Fundamentals tracks require zero prior engineering experience, starting with basic networking, binary IP addressing, and fundamental Linux terminal operations before progressing to advanced exploits.
+              </p>
+            </div>
+            <div className="rounded-xl border border-line bg-panel/60 p-4">
+              <h3 className="text-sm font-semibold text-white">Are ByteBreach study rooms and cheat sheets free?</h3>
+              <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+                ByteBreach provides free community access to structured study modules, cheat sheets, protocol summaries, and interactive practice challenges to empower cybersecurity learners worldwide.
+              </p>
+            </div>
           </div>
         </div>
       </section>

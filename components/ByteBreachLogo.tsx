@@ -13,15 +13,28 @@ export function ByteBreachLogo({
   className = "",
   animated = false,
 }: ByteBreachLogoProps) {
+  const defaultSrc =
+    size <= 48
+      ? "/bytebreach-logo-48.webp"
+      : size <= 96
+      ? "/bytebreach-logo-96.webp"
+      : "/bytebreach-logo-192.webp";
+
   return (
     <div
       className={`relative inline-flex items-center justify-center shrink-0 ${className}`}
       style={{ width: size, height: size }}
     >
       <picture>
-        <source srcSet="/bytebreach-logo.webp" type="image/webp" />
+        <source
+          type="image/webp"
+          srcSet="/bytebreach-logo-48.webp 48w, /bytebreach-logo-96.webp 96w, /bytebreach-logo-192.webp 192w, /bytebreach-logo.webp 512w"
+          sizes={`${size}px`}
+        />
         <img
-          src="/bytebreach-logo.webp"
+          src={defaultSrc}
+          srcSet="/bytebreach-logo-48.webp 48w, /bytebreach-logo-96.webp 96w, /bytebreach-logo-192.webp 192w, /bytebreach-logo.webp 512w"
+          sizes={`${size}px`}
           alt="ByteBreach Security Academy Official Logo"
           width={size}
           height={size}
