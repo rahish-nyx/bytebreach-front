@@ -50,6 +50,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [selectedPath, setSelectedPath] = useState("all");
   const [greeting, setGreeting] = useState("Welcome");
+  const [savedLocalTrack, setSavedLocalTrack] = useState<string | null>(null);
   const { user } = useAuth();
   const { name, profile } = useUserProfile();
   const { progress } = useStudentProgress();
@@ -70,6 +71,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     setGreeting(getGreeting());
+    try {
+      const local = window.localStorage.getItem("bytebreach_last_track");
+      if (local) setSavedLocalTrack(local);
+    } catch {}
   }, []);
 
   const userCompleted = Array.isArray(profile?.completedModules)
@@ -136,19 +141,14 @@ export default function Dashboard() {
       }
     }
 
-    // 4. LocalStorage fallback
-    if (typeof window !== "undefined") {
-      try {
-        const localTrack = window.localStorage.getItem("bytebreach_last_track");
-        if (localTrack) {
-          const found = paths.find(
-            (p) =>
-              p.id.toLowerCase() === localTrack.toLowerCase() ||
-              p.title.toLowerCase().includes(localTrack.toLowerCase())
-          );
-          if (found) return found;
-        }
-      } catch {}
+    // 4. Stored local track fallback (synced post-mount to eliminate SSR hydration mismatch)
+    if (savedLocalTrack) {
+      const found = paths.find(
+        (p) =>
+          p.id.toLowerCase() === savedLocalTrack.toLowerCase() ||
+          p.title.toLowerCase().includes(savedLocalTrack.toLowerCase())
+      );
+      if (found) return found;
     }
 
     // 5. User completed modules fallback
@@ -167,7 +167,7 @@ export default function Dashboard() {
 
     // 6. Default to first path with uncompleted modules, or CCNA
     return paths.find((p) => p.completedModules < p.totalModules) || paths[0] || fallbackPaths[0];
-  }, [selectedPath, paths, profile, progress, modules, userCompleted]);
+  }, [selectedPath, paths, profile, progress, modules, userCompleted, savedLocalTrack]);
 
   // Sequential recommended modules for the active track (Module 1 -> Module 2 -> Module 3...)
   const recommendedModules = useMemo(() => {
@@ -297,7 +297,7 @@ export default function Dashboard() {
             <div className="mt-7 flex flex-col justify-between gap-5 sm:mt-8 lg:flex-row lg:items-end">
               <div>
                 <div className="eyebrow text-cyan">Your cyber journey</div>
-                <h1 className="mt-2 text-3xl font-bold tracking-tight text-white md:text-4xl">
+                <h1 className="mt-2 text-3xl font-bold tracking-tight text-white md:text-4xl" suppressHydrationWarning>
                   {greeting}, {user?.displayName || displayName || "Rez"} <span className="text-cyan">⌁</span>
                 </h1>
                 <p className="mt-2 text-sm text-muted">
@@ -393,7 +393,7 @@ export default function Dashboard() {
         <section>
           <div className="mb-4 flex items-end justify-between">
             <div>
-              <div className="eyebrow text-cyan">
+              <div className="eyebrow text-cyan" suppressHydrationWarning>
                 Resume your path · {activeTrack?.title || "CCNA"}
               </div>
               <h2 className="mt-1 text-xl font-bold">Recommended next modules</h2>
@@ -486,7 +486,7 @@ function Metric({
       <div className="flex items-start justify-between">
         <div>
           <div className="text-xs text-slate-400 font-medium">{label}</div>
-          <div className="text-2xl font-bold text-white tracking-tight mt-1">{value}</div>
+          <div className="text-2xl font-bold text-white tracking-tight mt-1" suppressHydrationWarning>{value}</div>
         </div>
         <div className={`grid h-9 w-9 place-items-center rounded-xl ${badgeClassName}`}>
           {icon}
