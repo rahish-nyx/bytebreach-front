@@ -11,6 +11,8 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { DAILY_CHALLENGE_XP, submitDailyChallenge } from "@/lib/submissions";
 import { updateUserActivity } from "@/lib/activity";
 
+import { DAILY_CHALLENGE_POOL } from "@/lib/dailyChallengePool";
+
 type Challenge = {
   title?: string;
   prompt?: string;
@@ -23,11 +25,29 @@ type Challenge = {
   updatedAt?: unknown;
 };
 
+function getFallbackChallenge(): Challenge {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 0);
+  const diff = now.getTime() - startOfYear.getTime();
+  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const poolItem = DAILY_CHALLENGE_POOL[dayOfYear % DAILY_CHALLENGE_POOL.length] || DAILY_CHALLENGE_POOL[0];
+  return {
+    title: poolItem.title,
+    prompt: poolItem.prompt,
+    scenario: poolItem.scenario,
+    instructions: poolItem.instructions,
+    category: poolItem.category,
+    difficulty: poolItem.difficulty,
+    parentTopic: poolItem.category,
+    id: poolItem.id,
+  };
+}
+
 export function DailyChallenge() {
   const router = useRouter();
   const { user } = useAuth();
   const { name } = useUserProfile();
-  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [challenge, setChallenge] = useState<Challenge>(getFallbackChallenge);
   const [answer, setAnswer] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -49,7 +69,11 @@ export function DailyChallenge() {
     // Proactively verify 10:00 AM cycle rotation
     void fetch("/api/daily-challenge/rotate?sync=1").catch(() => {});
     return onSnapshot(doc(db, "dailyChallenges", "current"), (snapshot) => {
-      setChallenge(snapshot.exists() ? (snapshot.data() as Challenge) : null);
+      if (snapshot.exists()) {
+        setChallenge(snapshot.data() as Challenge);
+      } else {
+        setChallenge(getFallbackChallenge());
+      }
     });
   }, []);
 
@@ -111,18 +135,6 @@ export function DailyChallenge() {
       setBusy(false);
     }
   };
-
-  if (!challenge) {
-    return (
-      <section className="rounded-2xl border border-violet/20 bg-violet/[.05] p-4 sm:p-5 text-xs sm:text-sm text-muted">
-        <div className="flex items-center gap-2 text-violet">
-          <Sparkles size={16} className="animate-pulse" />
-          <span className="font-bold">Daily challenge</span>
-        </div>
-        <p className="mt-2">Daily challenge loading...</p>
-      </section>
-    );
-  }
 
   const canSubmit = Boolean(answer.trim() || file);
 

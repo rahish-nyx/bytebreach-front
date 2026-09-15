@@ -83,10 +83,10 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: "ByteBreach",
     generator: "Next.js",
     alternates: {
-      canonical: seo.canonicalUrl || siteUrl,
+      canonical: seo.canonicalUrl || `${siteUrl.replace(/\/+$/, "")}/`,
       languages: {
-        "en": siteUrl,
-        "x-default": siteUrl,
+        "en": `${siteUrl.replace(/\/+$/, "")}/`,
+        "x-default": `${siteUrl.replace(/\/+$/, "")}/`,
       },
     },
     robots: {

@@ -51,6 +51,23 @@ const nextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      {
+        source: "/:all*(svg|jpg|jpeg|png|webp|avif|ico|css|js|woff2|woff)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+          {
+            key: "Vercel-CDN-Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
   async redirects() {

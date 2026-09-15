@@ -31,6 +31,13 @@ const fallbackPaths = [
   { id: "ethical-hacking", title: "Ethical Hacking", level: "Intermediate", description: "Think like an attacker. Defend like a pro.", totalModules: 28, completedModules: 0, percentage: 0, color: "emerald" }
 ];
 
+const defaultFallbackModules = [
+  { id: "ccna-subnetting", title: "IPv4 & IPv6 Subnetting Architecture", trackId: "ccna", track: "CCNA", duration: "25 min", progress: 0 },
+  { id: "cisco-ios-cli", title: "Cisco IOS Switch & Router Configuration", trackId: "ccna", track: "CCNA", duration: "30 min", progress: 0 },
+  { id: "wireshark-pcaps", title: "Network Packet Analysis with Wireshark", trackId: "ethical-hacking", track: "Ethical Hacking", duration: "20 min", progress: 0 },
+  { id: "routing-ospf", title: "Enterprise Single-Area OSPFv2 Routing", trackId: "ccnp-enterprise", track: "CCNP Enterprise", duration: "35 min", progress: 0 },
+];
+
 const getGreeting = () => {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 12) return "Good morning";
@@ -91,7 +98,9 @@ export default function Dashboard() {
     : fallbackPaths;
   const visiblePaths = selectedPath === "all" ? paths : paths.filter((item) => item.id === selectedPath || item.title.toLowerCase().includes(selectedPath));
   const visibleModules = useMemo(() => {
-    const list = modules.filter((item) => item.published !== false).map((item) => ({ id: item.id, title: String(item.title || item.id), trackId: String(item.trackId || ""), track: paths.find((path) => path.id === item.trackId)?.title || String(item.trackId || "Learning path"), progress: Number(progress.find((entry) => entry.id === item.id)?.percent ?? item.progress ?? 0), duration: String(item.duration || `${item.durationMinutes || 0} min`) }));
+    const list = modules.length
+      ? modules.filter((item) => item.published !== false).map((item) => ({ id: item.id, title: String(item.title || item.id), trackId: String(item.trackId || ""), track: paths.find((path) => path.id === item.trackId)?.title || String(item.trackId || "Learning path"), progress: Number(progress.find((entry) => entry.id === item.id)?.percent ?? item.progress ?? 0), duration: String(item.duration || `${item.durationMinutes || 0} min`) }))
+      : defaultFallbackModules;
     return selectedPath === "all" ? list : list.filter((item) => item.trackId === selectedPath);
   }, [modules, paths, progress, selectedPath]);
   const nextModule = visibleModules.find((item) => item.progress < 100) || visibleModules[0];
